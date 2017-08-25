@@ -47,7 +47,6 @@ export class ConexionHttpProvider {
   }
 
   llenarDatosRespons(respuesta:any){
-    //console.log(respuesta)
     this.data = respuesta._body;
     this.mensaje = respuesta.statusText;
     this.codigo = respuesta.status;
@@ -87,23 +86,26 @@ export class ConexionHttpProvider {
     try{
       if(this.isOnline){
         let parametros:string = await Accion+"/"+FechaIni+"/"+FechaFin+"/"+IDSU;   
-        //console.log(parametros)     
-        let respuesta = await this.http.get(url+parametros).toPromise();        
+        let respuesta = await this.http.get(url+parametros).toPromise();    
+        console.log(respuesta)    ;
         await this.llenarDatosRespons(respuesta);
         return true;
       }else{
         return true;
       }
-    }catch{
+    }catch (e){
+      console.log(e);
+      await this.llenarDatosRespons(e);
       return false
     }
   }
 
-  async getStockBajo(IDSU:number){
+  async getStockBajo(IDSU:number,ACC:String){
     const url = this.dirCone+urlAPI.getStockBajo;
     try{
       if(this.isOnline){
-        let parametros:string=IDSU.toString();        
+        let parametros:string=IDSU.toString()+"/"+ACC;
+        console.log(url+parametros)        
         let respuesta = await this.http.get(url+parametros).toPromise();        
         await this.llenarDatosRespons(respuesta);
         return true;
@@ -115,11 +117,11 @@ export class ConexionHttpProvider {
     }
   }
 
-  async getResStockBajo(IDSU:number){
+  async getResStockBajo(IDSU:number,ACC:String){
     const url = this.dirCone+urlAPI.getResumenStockBajo;
     try{
       if(this.isOnline){
-        let parametros:string=IDSU.toString();        
+        let parametros:string=IDSU.toString()+"/"+ACC;        
         let respuesta = await this.http.get(url+parametros).toPromise();        
         await this.llenarDatosRespons(respuesta);
         return true;
@@ -145,4 +147,39 @@ export class ConexionHttpProvider {
       return false
     }
   }
+
+  async getFactAnuales(Accion:string, IDSU:number, AñoActual:boolean){
+    //[Route("F/getMesCV/{Acc}/{IDSU}/{AnoAct}")]
+    const url = this.dirCone+urlAPI.getFacCVAños;
+    try{
+      if(this.isOnline){     
+        let parametros:string=Accion+"/"+IDSU+"/"+AñoActual;        
+        //console.log(url+parametros)     
+        let respuesta = await this.http.get(url+parametros).toPromise();        
+        await this.llenarDatosRespons(respuesta);
+        return true;
+      }else{
+        return true;
+      }
+    }catch{
+      return false
+    }
+  }
+
+  async getUsuarioPorCaja(IDSU:number){
+    const url = this.dirCone+urlAPI.getUsuarioPorCaja;
+    try{
+      if(this.isOnline){     
+        let parametros:string=IDSU.toString();   
+        let respuesta = await this.http.get(url+parametros).toPromise();        
+        await this.llenarDatosRespons(respuesta);
+        return true;
+      }else{
+        return true;
+      }
+    }catch{
+      return false
+    }
+  }
+  
 }

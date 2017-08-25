@@ -68,6 +68,7 @@
     "ionic-angular": "3.9.2",
     "ionic-orm-3": "0.0.12",
     "ionicons": "3.0.0",
+    "moment": "^2.22.2",
     "ng2-charts": "^1.6.0",
     "ng2-validation": "^4.2.0",
     "rxjs": "^5.5.12",
