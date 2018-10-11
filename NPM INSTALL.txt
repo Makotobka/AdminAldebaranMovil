@@ -68,3 +68,6 @@ npm install --save @ionic-native/base64
 
 npm install crypto-js
 npm i aes256
+
+ionic cordova plugin add cordova-plugin-filepath
+npm install --save @ionic-native/file-path

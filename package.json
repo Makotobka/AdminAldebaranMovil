@@ -29,6 +29,7 @@
     "@ionic-native/file-chooser": "^4.15.0",
     "@ionic-native/file-encryption": "^4.15.0",
     "@ionic-native/file-opener": "^4.15.0",
+    "@ionic-native/file-path": "^4.15.0",
     "@ionic-native/file-transfer": "^4.15.0",
     "@ionic-native/in-app-browser": "^4.15.0",
     "@ionic-native/local-notifications": "^4.15.0",

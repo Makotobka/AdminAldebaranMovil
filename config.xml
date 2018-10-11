@@ -89,7 +89,6 @@
     <plugin name="cordova-plugin-filechooser" spec="1.0.1" />
     <plugin name="cordova-safe" spec="2.0.1" />
     <plugin name="cordova-plugin-file-opener2" spec="2.0.19" />
-    <plugin name="cordova-plugin-filepath" spec="1.4.2" />
     <plugin name="cordova-plugin-file-transfer" spec="1.7.1" />
     <plugin name="cordova-plugin-inappbrowser" spec="3.0.0" />
     <plugin name="cordova-plugin-local-notification" spec="0.9.0-beta.2" />
@@ -102,4 +101,5 @@
     <plugin name="com.darktalker.cordova.screenshot" spec="0.1.6" />
     <plugin name="cordova-sqlite-storage" spec="^2.4.0" />
     <plugin name="com-badrit-base64" spec="0.2.0" />
+    <plugin name="cordova-plugin-filepath" spec="1.4.2" />
 </widget>
