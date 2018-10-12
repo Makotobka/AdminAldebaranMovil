@@ -65,15 +65,22 @@ export class ConexionHttpProvider {
   }
 
   async getCaja(IDSU:number, EST:Boolean){
-    if(this.isOnline){
-      let parametros:string;
-      this.formatearHeaders(RequestMethod.Get,ResponseContentType.Json);
-      parametros = "/"+IDSU+"/"+EST;
-      let respuesta = await this.http.get(urlAPI.getCajasAbiertasCerradas+parametros).toPromise();
-      await this.llenarDatosRespons(respuesta);
-    }else{
-
+    try{
+      if(this.isOnline){
+        let parametros:string;
+        this.formatearHeaders(RequestMethod.Get,ResponseContentType.Json);
+        parametros = "/"+IDSU+"/"+EST;
+        console.log(this.dirCone+urlAPI.getCajasAbiertasCerradas+parametros);
+        let respuesta = await this.http.get(this.dirCone+urlAPI.getCajasAbiertasCerradas+parametros).toPromise();
+        await this.llenarDatosRespons(respuesta);
+        return true;
+      }else{
+        return true;
+      }
+    }catch{
+      return false
     }
+    
   }
 
 }
