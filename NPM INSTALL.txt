@@ -71,3 +71,6 @@ npm i aes256
 
 ionic cordova plugin add cordova-plugin-filepath
 npm install --save @ionic-native/file-path
+
+npm install ng2-charts --save
+npm install chart.js --save

@@ -1,0 +1,90 @@
+<!--
+  Generated template for the CajaPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+    <ion-navbar color="tango-scarlet-red">
+        <button ion-button menuToggle>
+        <ion-icon name="menu"></ion-icon>
+      </button>
+        <ion-title>
+            Caja
+        </ion-title>
+    </ion-navbar>
+    <ion-toolbar no-border-top color="tango-scarlet-red">
+        <ion-segment mode="md" [(ngModel)]="selSucursal" color="light">
+            <ion-segment-button value="Apertura">
+                Apertura
+            </ion-segment-button>
+            <ion-segment-button value="Cierre">
+                Cierre
+            </ion-segment-button>
+        </ion-segment>
+    </ion-toolbar>
+
+</ion-header>
+
+
+<ion-content padding>
+    <div #ControlCentral>
+        <div *ngIf="selSucursal==='Apertura'">
+            <ion-list>
+                <ion-item>
+                    <ion-avatar item-left>
+                        <img src="../../assets/img_caja/Open.png">
+                    </ion-avatar>
+                    <!--<h2>{{chat.name}}</h2>-->
+                    <h2>PTOVTA1</h2>
+                    <!--<p>{{chat.message}}</p>-->
+                    <p>ORLANDO BRIONES</p>
+                    <p>17h31</p>
+                    <ion-note item-right>
+                        <!--{{chat.time}}-->
+                        $ 273.23
+                    </ion-note>
+                </ion-item>
+                <ion-item>
+                    <ion-avatar item-left>
+                        <img src="../../assets/img_caja/Open.png">
+                    </ion-avatar>
+                    <!--<h2>{{chat.name}}</h2>-->
+                    <h2>PTOVTA2</h2>
+                    <!--<p>{{chat.message}}</p>-->
+                    <p>ORLANDO BRIONES</p>
+                    <p>17h31</p>
+                    <ion-note item-right>
+                        <!--{{chat.time}}-->
+                        $ 34.21
+                    </ion-note>
+                </ion-item>
+            </ion-list>
+        </div>
+        <div *ngIf="selSucursal==='Cierre'">
+            <span>Cierre</span>
+        </div>
+    </div>
+</ion-content>
+
+<ion-footer>
+    <ion-toolbar color="light">
+        <div *ngIf="selSucursal==='Apertura'">
+            <ion-buttons right class="valorTotal">
+                <strong>
+                  Total&nbsp;:&nbsp;
+                  <span> $ 542.87</span>
+                </strong>
+            </ion-buttons>
+        </div>
+        <div *ngIf="selSucursal==='Cierre'">
+            <ion-buttons right class="valorTotal">
+                <strong>
+                  Total&nbsp;:&nbsp;
+                  <span> $ 92.65</span>
+                </strong>
+            </ion-buttons>
+        </div>
+    </ion-toolbar>
+</ion-footer>

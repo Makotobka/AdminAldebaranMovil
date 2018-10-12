@@ -9,6 +9,7 @@ import { HomePage } from '../pages/home/home';
 import { paginas } from './app.page';
 import { importaciones } from './app.importaciones';
 import { proveedores } from './app.provedores';
+import { ConexionHttpProvider } from '../providers/conexion-http/conexion-http';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { proveedores } from './app.provedores';
     paginas
   ],
   providers: [
-    proveedores
+    proveedores,
+    ConexionHttpProvider
   ]
 })
 

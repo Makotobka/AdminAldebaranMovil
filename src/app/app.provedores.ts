@@ -10,6 +10,7 @@ import { PhotoViewer } from '@ionic-native/photo-viewer';
 import { FileOpener } from '@ionic-native/file-opener';
 import { FilePath } from '@ionic-native/file-path';
 import { InAppBrowser } from '@ionic-native/in-app-browser';
+import { ConexionHttpProvider } from "../providers/conexion-http/conexion-http";
 
 export const proveedores = [
     StatusBar,
@@ -23,5 +24,6 @@ export const proveedores = [
     FileTransferObject,    
     FileOpener,
     InAppBrowser,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
+    {provide: ErrorHandler, useClass: IonicErrorHandler},
+    ConexionHttpProvider
 ]
