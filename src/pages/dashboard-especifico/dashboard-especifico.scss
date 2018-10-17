@@ -1,3 +1,11 @@
 page-dashboard-especifico {
-
+    .itemCaja {
+        //max-height: 50px;
+        //height: 150px;
+    }
+    .canvas {
+        .chartjs-render-monitor {
+            height: 150px;
+        }
+    }
 }
