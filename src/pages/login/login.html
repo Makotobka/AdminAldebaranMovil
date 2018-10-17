@@ -1,18 +1,45 @@
-<!--
-  Generated template for the LoginPage page.
-
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
-<ion-header>
-
-  <ion-navbar>
-    <ion-title>login</ion-title>
-  </ion-navbar>
-
+<ion-header no-border>
+    <ion-navbar transparent>
+        <ion-title>
+            <label style="text-align: end;">
+          <ion-icon name="settings" on-click="clickConfiguracion()"></ion-icon>
+      </label>
+        </ion-title>
+    </ion-navbar>
 </ion-header>
 
+<ion-content>
+    <div class="login-container">
+        <img class="logo" src="./../../assets/img-log/loginIco.png" />
 
-<ion-content padding>
+        <!--*********** Form ***********-->
+        <form [formGroup]="loginForm" (submit)="clickLogin()" novalidate>
+            <ion-item>
+                <ion-label floating>Usuario</ion-label>
+                <ion-input tappable color="light" #email type="email" formControlName="email" [class.invalid]='!loginForm.controls.email.valid && loginForm.controls.email.dirty'>
+                </ion-input>
+            </ion-item>
+
+            <ion-item>
+                <ion-label floating>Contraseña</ion-label>
+                <ion-input tappable #password type="password" formControlName="password" [class.invalid]="!loginForm.controls.password.valid && loginForm.controls.password.dirty">
+                </ion-input>
+            </ion-item>
+
+            <ion-item class="error-message">
+                <p *ngIf="!loginForm.controls.email.valid  &&
+                loginForm.controls.email.dirty">*Please enter a valid email.</p>
+                <p *ngIf="!loginForm.controls.password.valid  &&
+                loginForm.controls.password.dirty">*Password needs more than 8 characters.</p>
+            </ion-item>
+
+            <div class="submit-box">
+                <button ion-button mode="ios" block type="submit" color="blue2">
+          Log in
+        </button>
+            </div>
+        </form>
+
+    </div>
 
 </ion-content>
