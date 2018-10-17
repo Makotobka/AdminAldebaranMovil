@@ -7,7 +7,7 @@
 <ion-header>
 
     <ion-navbar>
-        <ion-title>Detalle de Facturas Por Fechas</ion-title>
+        <ion-title class="TextoCentrado">{{titulo}}</ion-title>
     </ion-navbar>
 
 </ion-header>
@@ -15,7 +15,7 @@
 
 <ion-content padding>
 
-    <ion-card>
+    <ion-card *ngIf="!estado">
         <ion-item>
             <ion-label>Inicio</ion-label>
             <ion-datetime class="TextoJustificado" displayFormat="MMM DD YYYY" [(ngModel)]="FechaIni"></ion-datetime>

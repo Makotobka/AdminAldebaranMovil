@@ -16,3 +16,21 @@
     word-wrap: break-word;
     white-space: normal;
 }
+
+.TextoDescripcion {
+    font-family: initial;
+    font-style: oblique;
+    font-size: medium;
+}
+
+.TextoNumeros {
+    font-weight: bolder;
+    font-family: initial;
+    font-style: normal;
+    font-size: larger;
+    text-align: end;
+}
+
+.TextoCentrado {
+    text-align: center;
+}

@@ -10,6 +10,9 @@ import { paginas } from './app.page';
 import { importaciones } from './app.importaciones';
 import { proveedores } from './app.provedores';
 import { ConexionHttpProvider } from '../providers/conexion-http/conexion-http';
+import { ArchivoInternosProvider } from '../providers/archivo-internos/archivo-internos';
+import { IonicStorageModule } from '@ionic/storage';
+import { staticConfigStorage } from '../providers/archivo-internos/staticConfigStorage';
 
 @NgModule({
   declarations: [
@@ -18,6 +21,7 @@ import { ConexionHttpProvider } from '../providers/conexion-http/conexion-http';
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
+    IonicStorageModule.forRoot(staticConfigStorage),
     importaciones
   ],
   bootstrap: [IonicApp],
@@ -26,7 +30,8 @@ import { ConexionHttpProvider } from '../providers/conexion-http/conexion-http';
   ],
   providers: [
     proveedores,
-    ConexionHttpProvider
+    ConexionHttpProvider,
+    ArchivoInternosProvider
   ]
 })
 

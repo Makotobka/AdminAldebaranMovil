@@ -5,5 +5,7 @@ export const urlAPI = {
     getResumenStockBajo:"I/ResGetStock/",
     getAllSucursal:"S/GetAll",
     getFacCVAños:"F/getMesCV/",
-    getUsuarioPorCaja:"Cj/getUsuCaj/"
+    getUsuarioPorCaja:"Cj/getUsuCaj/",
+    getPunVenta:"Cj/getPunVen/",
+    getValPunVen:"Cj/getValPunVen/"
 };

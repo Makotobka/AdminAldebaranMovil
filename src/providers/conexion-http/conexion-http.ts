@@ -68,7 +68,6 @@ export class ConexionHttpProvider {
         let parametros:string;
         this.formatearHeaders(RequestMethod.Get,ResponseContentType.Json);
         parametros +=IDSU+"/"+EST;
-        console.log(this.dirCone+urlAPI.getCajasAbiertasCerradas+parametros);
         let respuesta = await this.http.get(this.dirCone+urlAPI.getCajasAbiertasCerradas+parametros).toPromise();
         await this.llenarDatosRespons(respuesta);
         return true;
@@ -87,14 +86,12 @@ export class ConexionHttpProvider {
       if(this.isOnline){
         let parametros:string = await Accion+"/"+FechaIni+"/"+FechaFin+"/"+IDSU;   
         let respuesta = await this.http.get(url+parametros).toPromise();    
-        console.log(respuesta)    ;
         await this.llenarDatosRespons(respuesta);
         return true;
       }else{
         return true;
       }
     }catch (e){
-      console.log(e);
       await this.llenarDatosRespons(e);
       return false
     }
@@ -105,7 +102,6 @@ export class ConexionHttpProvider {
     try{
       if(this.isOnline){
         let parametros:string=IDSU.toString()+"/"+ACC;
-        console.log(url+parametros)        
         let respuesta = await this.http.get(url+parametros).toPromise();        
         await this.llenarDatosRespons(respuesta);
         return true;
@@ -149,12 +145,10 @@ export class ConexionHttpProvider {
   }
 
   async getFactAnuales(Accion:string, IDSU:number, AñoActual:boolean){
-    //[Route("F/getMesCV/{Acc}/{IDSU}/{AnoAct}")]
     const url = this.dirCone+urlAPI.getFacCVAños;
     try{
       if(this.isOnline){     
         let parametros:string=Accion+"/"+IDSU+"/"+AñoActual;        
-        //console.log(url+parametros)     
         let respuesta = await this.http.get(url+parametros).toPromise();        
         await this.llenarDatosRespons(respuesta);
         return true;
@@ -166,11 +160,43 @@ export class ConexionHttpProvider {
     }
   }
 
-  async getUsuarioPorCaja(IDSU:number){
+  async getUsuarioPorCaja(IDSU:number,IDPT:number){
     const url = this.dirCone+urlAPI.getUsuarioPorCaja;
     try{
       if(this.isOnline){     
+        let parametros:string=IDSU.toString()+"/"+IDPT.toString();      
+        let respuesta = await this.http.get(url+parametros).toPromise();        
+        await this.llenarDatosRespons(respuesta);
+        return true;
+      }else{
+        return true;
+      }
+    }catch{
+      return false
+    }
+  }
+
+  async getPuntosVenta(IDSU:number){
+    const url = await this.dirCone+urlAPI.getPunVenta;
+    try{
+      if(this.isOnline){     
         let parametros:string=IDSU.toString();   
+        let respuesta = await this.http.get(url+parametros).toPromise();        
+        await this.llenarDatosRespons(respuesta);
+        return true;
+      }else{
+        return true;
+      }
+    }catch{
+      return false
+    }
+  }
+
+  async getValPunVenta(IDSU:number){
+    const url = await this.dirCone+urlAPI.getValPunVen;
+    try{
+      if(this.isOnline){     
+        let parametros:string=IDSU.toString();
         let respuesta = await this.http.get(url+parametros).toPromise();        
         await this.llenarDatosRespons(respuesta);
         return true;

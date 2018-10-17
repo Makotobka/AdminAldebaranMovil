@@ -42,7 +42,7 @@
     "@ionic-native/sqlite": "^4.15.0",
     "@ionic-native/status-bar": "~4.15.0",
     "@ionic/pro": "2.0.3",
-    "@ionic/storage": "2.2.0",
+    "@ionic/storage": "^2.2.0",
     "aes256": "^1.0.4",
     "chart.js": "^2.7.2",
     "com-badrit-base64": "0.2.0",
