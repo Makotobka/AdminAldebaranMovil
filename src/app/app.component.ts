@@ -14,11 +14,7 @@ import { DashboardEspecificoPage } from '../pages/dashboard-especifico/dashboard
   templateUrl: 'app.html'
 })
 export class MyApp {
-<<<<<<< HEAD
-  rootPage:any = LoginPage;
-=======
   rootPage:any = DashboardEspecificoPage;
->>>>>>> Oficina
 
   constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen) {
     platform.ready().then(() => {
