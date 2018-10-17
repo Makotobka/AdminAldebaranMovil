@@ -5,6 +5,8 @@ import { DashboardGeneralPage } from "../pages/dashboard-general/dashboard-gener
 import { DashboardEspecificoPage } from "../pages/dashboard-especifico/dashboard-especifico";
 import { CajaPage } from "../pages/caja/caja";
 import { DetalleCajaPage } from "../pages/detalle-caja/detalle-caja";
+import { FacturasPage } from "../pages/facturas/facturas";
+import { ConfiguracionPage } from "../pages/configuracion/configuracion";
 
 export const paginas = [
     MyApp,
@@ -13,5 +15,7 @@ export const paginas = [
     DashboardGeneralPage,
     DashboardEspecificoPage,
     CajaPage,
-    DetalleCajaPage
+    DetalleCajaPage,
+    FacturasPage,
+    ConfiguracionPage
 ];

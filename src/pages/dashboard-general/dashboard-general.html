@@ -6,13 +6,122 @@
 -->
 <ion-header>
 
-  <ion-navbar>
-    <ion-title>dashboardGeneral</ion-title>
-  </ion-navbar>
+    <ion-navbar>
+        <ion-title>DashBoard</ion-title>
+        <ion-buttons end>
+            <button ion-button icon-only (click)="sincronizar()">
+            <img style="height: 100%;" src="../../assets/imgs/update.png" >
+          </button>
+            <button ion-button icon-only (click)="configurar()">
+            <ion-icon name="settings"></ion-icon>
+          </button>
+        </ion-buttons>
+    </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
 
+    <ion-card>
+        <ion-card-header>Resumen de Caja</ion-card-header>
+        <ion-card-content>
+            <ion-item>
+                <ion-label>
+                    Factura Venta
+                </ion-label>
+                <ion-label>
+                    $ {{totalFV}}
+                </ion-label>
+            </ion-item>
+            <ion-item>
+                <ion-label>
+                    Factura Compra
+                </ion-label>
+                <ion-label>
+                    $ {{totalFC}}
+                </ion-label>
+            </ion-item>
+        </ion-card-content>
+    </ion-card>
+
+    <ion-card on-click="detalleFacturacion()">
+        <ion-card-header>Resumen de Facturacion</ion-card-header>
+        <ion-card-content>
+            <ion-item>
+                <ion-label>
+                    Factura Venta
+                </ion-label>
+                <ion-label>
+                    $ {{totalFV | redondear}}
+                </ion-label>
+            </ion-item>
+            <ion-item>
+                <ion-label>
+                    Factura Compra
+                </ion-label>
+                <ion-label>
+                    $ {{totalFC | redondear}}
+                </ion-label>
+            </ion-item>
+        </ion-card-content>
+    </ion-card>
+
+    <ion-card>
+        <ion-card-header>Resumen de Stock</ion-card-header>
+        <ion-card-content>
+            <ion-item>
+                <ion-label>
+                    Factura Venta
+                </ion-label>
+                <ion-label>
+                    $ {{totalFV}}
+                </ion-label>
+            </ion-item>
+            <ion-item>
+                <ion-label>
+                    Factura Compra
+                </ion-label>
+                <ion-label>
+                    $ {{totalFC}}
+                </ion-label>
+            </ion-item>
+        </ion-card-content>
+    </ion-card>
+
+    <ion-card>
+        <ion-card-header>Resumen de Activos</ion-card-header>
+        <ion-card-content>
+            <ion-item>
+                <ion-label>
+                    Factura Venta
+                </ion-label>
+                <ion-label>
+                    $ {{totalFV}}
+                </ion-label>
+            </ion-item>
+            <ion-item>
+                <ion-label>
+                    Factura Compra
+                </ion-label>
+                <ion-label>
+                    $ {{totalFC}}
+                </ion-label>
+            </ion-item>
+        </ion-card-content>
+    </ion-card>
+
 </ion-content>
+
+<ion-footer>
+    <ion-toolbar>
+        <ion-item>
+            <ion-label>
+                Inicio: {{FechaIni}}
+            </ion-label>
+            <ion-label>
+                Fin: {{FechaFin}}
+            </ion-label>
+        </ion-item>
+    </ion-toolbar>
+</ion-footer>

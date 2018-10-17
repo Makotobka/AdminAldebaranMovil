@@ -1,0 +1,92 @@
+<!--
+  Generated template for the FacturasPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+    <ion-navbar>
+        <ion-title>Detalle de Facturas</ion-title>
+    </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+
+    <ion-card class="cardTable">
+        <ion-card-header on-click="desplFV=!desplFV">
+            <ion-item>
+                <ion-label>
+                    Facturas de Ventas
+                </ion-label>
+                <ion-label>
+                    <ion-buttons end>
+                        $ {{totalFV | redondear}}
+                    </ion-buttons>
+                </ion-label>
+            </ion-item>
+        </ion-card-header>
+        <ion-card-content *ngIf="desplFV">
+            <ion-grid>
+                <ion-row *ngFor="let item of listFV">
+                    <ion-col>
+                        {{item.NomPV}}
+                    </ion-col>
+                    <ion-col>
+                        {{item.NomUs}}
+                    </ion-col>
+                    <ion-col>
+                        {{item.FormaPago}}
+                    </ion-col>
+                    <ion-col>
+                        {{item.Estado}}
+                    </ion-col>
+                    <ion-col>
+                        $ {{item.Total}}
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
+        </ion-card-content>
+
+
+    </ion-card>
+
+    <ion-card class="cardTable">
+        <ion-card-header on-click="desplFC=!desplFC">
+            <ion-item>
+                <ion-label>
+                    Facturas de Compras
+                </ion-label>
+                <ion-label>
+                    <ion-buttons end>
+                        $ {{totalFC | redondear}}
+                    </ion-buttons>
+                </ion-label>
+            </ion-item>
+        </ion-card-header>
+        <ion-card-content *ngIf="desplFC">
+            <ion-grid>
+                <ion-row *ngFor="let item of listFC">
+                    <ion-col>
+                        {{item.NomPV}}
+                    </ion-col>
+                    <ion-col>
+                        {{item.NomUs}}
+                    </ion-col>
+                    <ion-col>
+                        {{item.FormaPago}}
+                    </ion-col>
+                    <ion-col>
+                        {{item.Estado}}
+                    </ion-col>
+                    <ion-col>
+                        $ {{item.Total}}
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
+        </ion-card-content>
+    </ion-card>
+
+</ion-content>

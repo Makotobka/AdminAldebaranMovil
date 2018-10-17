@@ -47,21 +47,20 @@ export class ConexionHttpProvider {
   }
 
   llenarDatosRespons(respuesta:any){
-    console.log(respuesta)
+    //console.log(respuesta)
     this.data = respuesta._body;
     this.mensaje = respuesta.statusText;
     this.codigo = respuesta.status;
-
+    
     if(!respuesta.ok){
       if(this.codigo==0){
         console.log("Sin señal")
-        //this.serGlo.showToast(msgError.msgServerNull);
       }else{
         console.log("Error")
-        //this.serGlo.showToast("Error HTTP: "+this.codigo+" ; " +this.mensaje);
       }
-      //console.log("Codigo HTTP: ",this.codigo)
     }
+
+    
   }
 
   async getCaja(IDSU:number, EST:Boolean){
@@ -69,7 +68,7 @@ export class ConexionHttpProvider {
       if(this.isOnline){
         let parametros:string;
         this.formatearHeaders(RequestMethod.Get,ResponseContentType.Json);
-        parametros = "/"+IDSU+"/"+EST;
+        parametros +=IDSU+"/"+EST;
         console.log(this.dirCone+urlAPI.getCajasAbiertasCerradas+parametros);
         let respuesta = await this.http.get(this.dirCone+urlAPI.getCajasAbiertasCerradas+parametros).toPromise();
         await this.llenarDatosRespons(respuesta);
@@ -83,4 +82,36 @@ export class ConexionHttpProvider {
     
   }
 
+  async getResFac(Accion:string, FechaIni:string, FechaFin:string){
+    const url = this.dirCone+urlAPI.getResumenacturaComVen;
+    try{
+      if(this.isOnline){
+        let parametros:string=Accion+"/"+FechaIni+"/"+FechaFin;
+        //this.formatearHeaders(RequestMethod.Get,ResponseContentType.Json);
+        let respuesta = await this.http.get(url+parametros).toPromise();        
+        await this.llenarDatosRespons(respuesta);
+        return true;
+      }else{
+        return true;
+      }
+    }catch{
+      return false
+    }
+  }
+
+  async getStockBajo(IDSU:number){
+    const url = this.dirCone+urlAPI.getStockBajo;
+    try{
+      if(this.isOnline){
+        let parametros:string=IDSU.toString();        
+        let respuesta = await this.http.get(url+parametros).toPromise();        
+        await this.llenarDatosRespons(respuesta);
+        return true;
+      }else{
+        return true;
+      }
+    }catch{
+      return false
+    }
+  }
 }
