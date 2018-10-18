@@ -18,8 +18,7 @@
         <ion-item>
             <ion-label>Sucursal</ion-label>
             <ion-select [(ngModel)]="Sucursal">
-                <ion-option value="f">Female</ion-option>
-                <ion-option value="m">Male</ion-option>
+                <ion-option *ngFor="let item of ltSucursal" value="{{item.AGENCIA}}">{{item.AGENCIA}}</ion-option>
             </ion-select>
         </ion-item>
 

@@ -7,6 +7,7 @@ import { CajaPage } from "../pages/caja/caja";
 import { DetalleCajaPage } from "../pages/detalle-caja/detalle-caja";
 import { FacturasPage } from "../pages/facturas/facturas";
 import { ConfiguracionPage } from "../pages/configuracion/configuracion";
+import { StockPage } from "../pages/stock/stock";
 
 export const paginas = [
     MyApp,
@@ -17,5 +18,6 @@ export const paginas = [
     CajaPage,
     DetalleCajaPage,
     FacturasPage,
-    ConfiguracionPage
+    ConfiguracionPage,
+    StockPage
 ];

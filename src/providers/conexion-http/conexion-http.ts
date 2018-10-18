@@ -82,12 +82,12 @@ export class ConexionHttpProvider {
     
   }
 
-  async getResFac(Accion:string, FechaIni:string, FechaFin:string){
+  async getResFac(Accion:string, FechaIni:string, FechaFin:string,IDSU:number){
     const url = this.dirCone+urlAPI.getResumenacturaComVen;
     try{
       if(this.isOnline){
-        let parametros:string=Accion+"/"+FechaIni+"/"+FechaFin;
-        //this.formatearHeaders(RequestMethod.Get,ResponseContentType.Json);
+        let parametros:string = await Accion+"/"+FechaIni+"/"+FechaFin+"/"+IDSU;   
+        //console.log(parametros)     
         let respuesta = await this.http.get(url+parametros).toPromise();        
         await this.llenarDatosRespons(respuesta);
         return true;
@@ -105,6 +105,37 @@ export class ConexionHttpProvider {
       if(this.isOnline){
         let parametros:string=IDSU.toString();        
         let respuesta = await this.http.get(url+parametros).toPromise();        
+        await this.llenarDatosRespons(respuesta);
+        return true;
+      }else{
+        return true;
+      }
+    }catch{
+      return false
+    }
+  }
+
+  async getResStockBajo(IDSU:number){
+    const url = this.dirCone+urlAPI.getResumenStockBajo;
+    try{
+      if(this.isOnline){
+        let parametros:string=IDSU.toString();        
+        let respuesta = await this.http.get(url+parametros).toPromise();        
+        await this.llenarDatosRespons(respuesta);
+        return true;
+      }else{
+        return true;
+      }
+    }catch{
+      return false
+    }
+  }
+
+  async getAllSucursal(){
+    const url = this.dirCone+urlAPI.getAllSucursal;
+    try{
+      if(this.isOnline){            
+        let respuesta = await this.http.get(url).toPromise();        
         await this.llenarDatosRespons(respuesta);
         return true;
       }else{
