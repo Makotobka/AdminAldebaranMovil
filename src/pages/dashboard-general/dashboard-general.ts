@@ -30,6 +30,19 @@ export class DashboardGeneralPage {
     public totalFV;
     private FechaIni="";
     private FechaFin="";
+    public FacChartData=[];
+    public FacChartLabels=[];
+    public FacChartType:string = 'horizontalBar';
+    public FacChartLegend:boolean = false;  
+   
+    public FacChartOptions: any = {
+      responsive: true,
+      maintainAspectRatio: true,
+      scaleShowVerticalLines: false,
+      legend: {position: 'bottom'}
+  };
+
+  //{data: [65, 59, 80, 81, 56, 55, 40], label: 'Series A'},
   //#endregion
   //#region Stock
     public ltStok:Stock[];
@@ -37,14 +50,14 @@ export class DashboardGeneralPage {
     public totalStock;
     public GrupoMayorStockBajo:Res_Stock = {Cantidad:0,Grupo:"Desconocido"};
     
-    public pieChartLabels:string[] = [];
-    public pieChartData:number[] = [];
-    public pieChartType:string = 'pie';
-    public baseOptions: any = {
+    public StockpieChartLabels:string[] = [];
+    public StockpieChartData:number[] = [];
+    public StockpieChartType:string = 'pie';
+    public StockbaseOptions: any = {
       responsive: true,
       maintainAspectRatio: true,
     };
-    chartLegend:boolean = false;
+    StockchartLegend:boolean = false;
   //#endregion
   
   constructor(public modal:ModalController ,public con:ConexionHttpProvider,public navCtrl: NavController, public navParams: NavParams) {
@@ -65,6 +78,11 @@ export class DashboardGeneralPage {
       this.con.getResFac("C",this.FechaIni,this.FechaFin,this.Sucursal.ID).then(async ()=>{
         this.listFC = await JSON.parse(this.con.data);
         this.totalFC = await this.getSumatoria(this.listFC);
+        this.FacChartLabels = ["Ventas","Compras","asdasd"];
+        this.FacChartData = [this.totalFV, this.totalFC];
+
+        console.log(this.FacChartLabels)
+        console.log(this.FacChartData)
       });      
     });    
   }
@@ -126,13 +144,13 @@ export class DashboardGeneralPage {
     for (let index = 0; index < this.ltStokResumen.length; index++) {
       const element = await this.ltStokResumen[index];
       await temp1.push(element.Cantidad);
-      await this.pieChartLabels.push(element.Grupo);
+      await this.StockpieChartLabels.push(element.Grupo);
     }
 
     //this.pieChartLabels = await temp2;
-    this.pieChartData = await temp1;
-    console.log(this.pieChartLabels)
-    console.log(this.pieChartData)
+    this.StockpieChartData = await temp1;
+    console.log(this.StockpieChartLabels)
+    console.log(this.StockpieChartData)
   }
 
   contarDatosStock(){

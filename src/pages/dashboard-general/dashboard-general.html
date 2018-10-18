@@ -64,6 +64,10 @@
                     $ {{totalFC | redondear}}
                 </ion-label>
             </ion-item>
+            <ion-item>
+                <canvas baseChart [data]="FacChartData" [labels]="FacChartLabels" [legend]="FacChartLegend" [options]="FacChartOptions" [chartType]="FacChartType" chartType="horizontalBar">
+                </canvas>
+            </ion-item>
         </ion-card-content>
     </ion-card>
 
@@ -85,13 +89,10 @@
                 <ion-label>
                     $ {{GrupoMayorStockBajo.Grupo}}
                 </ion-label>
-
             </ion-item>
             <ion-item>
-                <div style="display: block">
-                    <canvas baseChart [data]="pieChartData" [labels]="pieChartLabels" [chartType]="pieChartType" [options]="baseOptions" [legend]="chartLegend">
-                    </canvas>
-                </div>
+                <canvas #CanvasPIE baseChart [data]="StockpieChartData" [labels]="StockpieChartLabels" [chartType]="StockpieChartType" [options]="StockbaseOptions" [legend]="StockchartLegend">
+                </canvas>
             </ion-item>
         </ion-card-content>
     </ion-card>
