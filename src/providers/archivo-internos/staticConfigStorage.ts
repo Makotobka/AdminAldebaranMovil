@@ -3,8 +3,10 @@ export const keyStorage = {
     keyListaStockMin:"keyListaStockMin",
     keyListaStockResumenMin:"keyListaStockResumenMin",
     keyListaStockMax:"keyListaStockMax",
-    keyListaStockResumenMax:"keyListaStockResumenMax"
-
+    keyListaStockResumenMax:"keyListaStockResumenMax",
+    keyListaDeudaCliente:"keyListaDeudaCliente",
+    keyListaResumenDeudaCliente:"keyListaResumenDeudaCliente",
+    keyListaDeudaEmpresa:"keyListaDeudaEmpresa"
 };
   
 export const staticConfigStorage = {

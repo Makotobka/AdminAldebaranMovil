@@ -9,6 +9,7 @@ import { DashboardEspecificoPage } from '../pages/dashboard-especifico/dashboard
 import { LoginPage } from '../pages/login/login';
 import { FacturasPage } from '../pages/facturas/facturas';
 import { StockPage } from '../pages/stock/stock';
+import { ListaDeudaPage } from '../pages/lista-deuda/lista-deuda';
 @Component({
   templateUrl: 'app.html'
 })
@@ -37,6 +38,9 @@ export class MyApp {
       break;
       case "Stock Maximo":
         modalPage = this.modal.create(StockPage,{min:false,titulo:"Stock Maximo"});      
+      break;
+      case "Clientes Adeudores":
+        modalPage = this.modal.create(ListaDeudaPage);
       break;
     }
     modalPage.present();

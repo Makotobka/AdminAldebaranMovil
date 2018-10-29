@@ -34,3 +34,22 @@
 .TextoCentrado {
     text-align: center;
 }
+
+.cardTable {
+    .card-header {
+        background-color: aquamarine;
+        padding: 5px 15px 0 15px;
+        .item {
+            background-color: transparent;
+            //border-style: ridge;
+            padding: 0 0 0 0;
+        }
+    }
+    .card-content {
+        padding: 0 15px 5px 15px;
+    }
+}
+
+.alineadoIzq {
+    text-align: end;
+}

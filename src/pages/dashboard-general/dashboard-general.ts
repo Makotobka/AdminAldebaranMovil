@@ -11,6 +11,8 @@ import { PuntoVenta } from '../../estructuras/PuntoVenta';
 import { Chart } from 'chart.js';
 import { ArchivoInternosProvider } from '../../providers/archivo-internos/archivo-internos';
 import { keyStorage } from '../../providers/archivo-internos/staticConfigStorage';
+import { Deuda } from '../../estructuras/Deuda';
+import { templateJitUrl } from '@angular/compiler';
 
 /**
  * Generated class for the DashboardGeneralPage page.
@@ -108,6 +110,18 @@ export class DashboardGeneralPage {
         legend: {position: 'bottom'}
     };
   //#endregion
+  //#regino Deudas
+    @ViewChild('barHoriDeuda') CanvasDeuda;  
+    public totalDeudaPagar=0;
+    public totalDeudaCobrar=0;
+    public totalProDiaDeuda=0;
+    public minimoProPago=0;
+    public maximoProPago=0;
+    public ltDeudaResCobro:Deuda[]=[];
+    public ltDeudaCobro:Deuda[]=[];
+    public ltDeudaPagar:Deuda[]=[];
+    public promedioUsuarioPago:any[]=[];
+  //#endregion
 
   constructor(private archivo:ArchivoInternosProvider,public modal:ModalController ,public con:ConexionHttpProvider,public navCtrl: NavController, public navParams: NavParams) {
     let temp: string = new Date().toISOString();
@@ -180,12 +194,12 @@ export class DashboardGeneralPage {
       this.barChartLabels=[];
     }
     await this.limpiarDatos();
-    //await this.getUsuarioCaja();
+    //await this.getUsuarioCaja(this.Sucursal.ID,1);
     await this.getStockBajo();
     await this.getStockAlto();
     await this.getFacCVAños();
     await this.getPuntoVenta(this.Sucursal.ID);
-
+    await this.getDeudas(this.Sucursal.ID);
 
     await this.guardarInformacion();
     await this.refrescarGraficos();
@@ -205,6 +219,56 @@ export class DashboardGeneralPage {
     })
   }
 
+  async getDeudas(IDSU){    
+    await this.con.getDeudas(IDSU,"RESCOBRAR").then(async resRC=>{
+      if(resRC){
+         this.ltDeudaResCobro = await JSON.parse(this.con.data);
+        await this.con.getDeudas(IDSU,"COBRAR").then(async resC=>{
+          if(resC){
+             this.ltDeudaCobro = await JSON.parse(this.con.data);
+            await this.con.getDeudas(IDSU,"PAGAR").then(async resP=>{
+              if(resP){
+                 this.ltDeudaPagar = await JSON.parse(this.con.data);
+                await this.con.getPromDeudaDia().then(async resPro=>{
+                  if(resPro){
+                    this.promedioUsuarioPago = await JSON.parse(this.con.data);
+                    //console.log(this.promedioUsuarioPago);
+                    this.minimoProPago=10000;
+                    this.maximoProPago=0;
+
+                    await this.promedioUsuarioPago.forEach(elemet=>{
+                      this.totalProDiaDeuda = this.totalProDiaDeuda.valueOf() + elemet.Promedio.valueOf();                      
+                      
+                      if(this.minimoProPago.valueOf() > elemet.Promedio.valueOf()){
+                        this.minimoProPago = elemet.Promedio
+                      }
+                      if(this.maximoProPago.valueOf() < elemet.Promedio.valueOf()){
+                        this.maximoProPago = elemet.Promedio
+                      }
+                      
+                    })
+                    this.totalProDiaDeuda = this.totalProDiaDeuda.valueOf()/this.promedioUsuarioPago.length.valueOf();     
+
+                    await this.ltDeudaCobro.forEach(element => {
+                      this.totalDeudaCobrar = this.totalDeudaCobrar.valueOf() + element.Deuda.valueOf();                      
+                    });
+
+                    await  this.ltDeudaPagar.forEach(element => {
+                      this.totalDeudaPagar = this.totalDeudaPagar.valueOf() + element.Deuda.valueOf();
+                    });                
+                    this.CanvasDeuda.data.datasets[0].data=[this.totalDeudaCobrar,this.totalDeudaPagar,0];     
+                    this.CanvasDeuda.data.datasets[0].label="CTG Cobrar y Pagar";  
+                    this.CanvasDeuda.update();
+                  }
+                })
+              }
+            });
+          }
+        });
+      }
+    });
+  }
+
   async guardarInformacion(){
 
     await this.archivo.escribirArchivo(keyStorage.keySucursal,this.Sucursal);  //Se usa en facturas
@@ -212,15 +276,18 @@ export class DashboardGeneralPage {
     await this.archivo.escribirArchivo(keyStorage.keyListaStockResumenMin,this.ltstockMinRes);  //Se usa en stock
     await this.archivo.escribirArchivo(keyStorage.keyListaStockMax,this.ltstokMax);  //Se usa en stock
     await this.archivo.escribirArchivo(keyStorage.keyListaStockResumenMax,this.ltstockMaxRes);  //Se usa en stock
-
+    await this.archivo.escribirArchivo(keyStorage.keyListaResumenDeudaCliente,this.ltDeudaResCobro);
+    await this.archivo.escribirArchivo(keyStorage.keyListaDeudaCliente,this.ltDeudaCobro);
+    await this.archivo.escribirArchivo(keyStorage.keyListaDeudaEmpresa,this.ltDeudaPagar);
+    
     console.log("Guardado completo")
   }
 
-  getStockBajo(){    
-    this.con.getResStockBajo(this.Sucursal.ID,'B').then(async (resA)=>{
+  async getStockBajo(){    
+    await this.con.getResStockBajo(this.Sucursal.ID,'B').then(async (resA)=>{
       if(resA){
         this.ltstockMinRes = await JSON.parse(this.con.data);
-        this.con.getStockBajo(this.Sucursal.ID,'B').then(async (resB)=>{
+        await this.con.getStockBajo(this.Sucursal.ID,'B').then(async (resB)=>{
           if(resB){
             this.ltstokMin = await JSON.parse(this.con.data)
             this.selectOp(2);
@@ -230,14 +297,19 @@ export class DashboardGeneralPage {
     })    
   }
 
-  getPuntoVenta(IDSU){
-    this.con.getPuntosVenta(IDSU).then(async (resA)=>{
+  async getPuntoVenta(IDSU){
+    await this.con.getPuntosVenta(IDSU).then(async (resA)=>{
+      //console.log(resA)
       if(resA){
         this.ltPV = await JSON.parse(this.con.data);
+        //console.log(this.ltPV)
         if(this.ltPV.length>0){
-          await this.con.getValPunVenta(IDSU).then(async res=>{
+          let tempFecha = new Date();
+          await this.con.getValPunVenta(IDSU,tempFecha).then(async res=>{
+            //console.log(res)
             if(res){
               this.ltValCaja = await JSON.parse(this.con.data); 
+              //console.log(this.ltValCaja)
               if(this.ltValCaja.length>0){
                 await this.selectPV(this.ltValCaja[0]);              
               }
@@ -262,17 +334,17 @@ export class DashboardGeneralPage {
         this.totalVentasUsuarios = this.totalVentasUsuarios.valueOf()+element.Total.valueOf();
       });
       tempData.push(0);
-      this.CanvasCaja.data.datasets[0].data=tempData     
+      this.CanvasCaja.data.datasets[0].data=tempData;     
       this.CanvasCaja.data.datasets[0].label=item.Nombre;  
       this.CanvasCaja.update()
     }
   }
 
-  getStockAlto(){
-    this.con.getResStockBajo(this.Sucursal.ID,'A').then(async (resA)=>{
+  async getStockAlto(){
+    await this.con.getResStockBajo(this.Sucursal.ID,'A').then(async (resA)=>{
       if(resA){
         this.ltstockMaxRes = await JSON.parse(this.con.data);
-        this.con.getStockBajo(this.Sucursal.ID,'A').then(async (resB)=>{
+        await this.con.getStockBajo(this.Sucursal.ID,'A').then(async (resB)=>{
           if(resB){
             this.ltstokMax = await JSON.parse(this.con.data)
             this.selectOp(1);
@@ -284,29 +356,35 @@ export class DashboardGeneralPage {
 
   async llenarDatosGraficoStock(){
     let temp1=[];    
-    for (let index = 0; index < this.ltStokResumen.length; index++) {
-      const element = await this.ltStokResumen[index];
-      await temp1.push(element.Cantidad);
-      await this.StockpieChartLabels.push(element.Grupo);
-      if((index.valueOf()+1) === this.cantMinMostrar.valueOf()){
-        break;
+    if(this.ltStokResumen!=undefined){
+      for (let index = 0; index < this.ltStokResumen.length; index++) {
+        const element = await this.ltStokResumen[index];
+        await temp1.push(element.Cantidad);
+        await this.StockpieChartLabels.push(element.Grupo);
+        if((index.valueOf()+1) === this.cantMinMostrar.valueOf()){
+          break;
+        }
       }
-    }
-
-    //this.pieChartLabels = await temp2;
-    this.StockpieChartData = await temp1;
+  
+      //this.pieChartLabels = await temp2;
+      this.StockpieChartData = await temp1;
+    }    
   }
 
-  contarDatosStock(){    
+  async contarDatosStock(){    
     this.totalStock=0;
-    this.ltStokResumen.forEach(grupo => {
-      this.totalStock = this.totalStock.valueOf() + grupo.Cantidad.valueOf();
-    });    
-    this.ltStokResumen.forEach(grupo => {
-        if(this.GrupoMayorStockBajo.Cantidad<grupo.Cantidad){
-          this.GrupoMayorStockBajo=grupo;
-        }
-    });
+    if(this.ltStokResumen!=undefined){
+      if(this.ltStokResumen.length>0){
+        await this.ltStokResumen.forEach(grupo => {
+          this.totalStock = this.totalStock.valueOf() + grupo.Cantidad.valueOf();
+        });    
+        await this.ltStokResumen.forEach(grupo => {
+            if(this.GrupoMayorStockBajo.Cantidad<grupo.Cantidad){
+              this.GrupoMayorStockBajo=grupo;
+            }
+        });
+      }
+    }    
   }
 
   goDetalleStock(){    
@@ -352,6 +430,7 @@ export class DashboardGeneralPage {
 
   async limpiarDatos(){    
     this.totalUsuarios=0;
+    this.totalProDiaDeuda=0
     this.totalVentasUsuarios=0;
     this.totalStock=0;
     this.totalVentasPunVenta=0;
@@ -396,6 +475,42 @@ export class DashboardGeneralPage {
     this.selectPunVen={"Nombre":""}
     //#endregion
     
+    //#region Deudas Grafico
+    if(this.CanvasDeuda.nativeElement!=undefined){
+      this.CanvasDeuda = new Chart(this.CanvasDeuda.nativeElement, { 
+        type: 'horizontalBar',
+        data: {
+            labels: ["CTG Cobrar","CTG Pagar"],
+            datasets: [{      
+                label: 'Sin Caja',             
+                data:[0,0,0],
+                backgroundColor: [                        
+                    'rgba(54, 162, 235, 0.2)',                        
+                    'rgba(75, 192, 192, 0.2)'                        
+                ],
+                borderColor: [                        
+                    'rgba(54, 162, 235, 1)',                        
+                    'rgba(75, 192, 192, 1)'                        
+                ],
+                borderWidth: 2
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            }
+        }  
+      });
+    }else{
+      this.CanvasDeuda.data.datasets[0].data=[0,0,0]       
+      this.CanvasDeuda.data.datasets[0].label="Sin Datos";
+    }
+    this.CanvasDeuda.update()
+    //#endregion
     await this.archivo.escribirArchivo(keyStorage.keySucursal,undefined);  //Se usa en facturas
     await this.archivo.escribirArchivo(keyStorage.keyListaStockMin,undefined);  //Se usa en stock
     await this.archivo.escribirArchivo(keyStorage.keyListaStockResumenMin,undefined);  //Se usa en stock
@@ -406,7 +521,9 @@ export class DashboardGeneralPage {
   }
   
   async getUsuarioCaja(IDSU,IDPT){
-    await this.con.getUsuarioPorCaja(IDSU,IDPT).then(async res=>{      
+    let sdw = new Date()
+    console.log(sdw)
+    await this.con.getUsuarioPorCaja(IDSU,IDPT,sdw).then(async res=>{      
       if(res){
         let UserCaja = await JSON.parse(this.con.data);
         UserCaja.forEach(element => {

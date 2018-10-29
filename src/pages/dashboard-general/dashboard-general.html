@@ -147,23 +147,27 @@
     </ion-card>
 
     <ion-card>
-        <ion-card-header class="titulosCentados TextoJustificado">Activos</ion-card-header>
+        <ion-card-header class="titulosCentados TextoJustificado">Cuentas x Cobrar VS Cuentas x Pagar</ion-card-header>
         <ion-card-content>
             <ion-item>
-                <ion-label>
-                    Factura Venta
+                <ion-label class="TextoJustificado TextoDescripcion">
+                    Promedio de Pago a Credito
                 </ion-label>
-                <ion-label>
-                    $ 5436.67
+                <ion-label class="TextoJustificado TextoNumeros">
+                    {{totalProDiaDeuda | redondear}} Dias
                 </ion-label>
             </ion-item>
             <ion-item>
-                <ion-label>
-                    Factura Compra
+                <ion-label class="TextoJustificado TextoDescripcion">
+                    Minino {{minimoProPago}} Dias
                 </ion-label>
-                <ion-label>
-                    $ 072.32
+                <ion-label class="TextoJustificado TextoDescripcion">
+                    Maximo {{maximoProPago}} Dias
                 </ion-label>
+            </ion-item>
+
+            <ion-item>
+                <canvas #barHoriDeuda></canvas>
             </ion-item>
         </ion-card-content>
     </ion-card>

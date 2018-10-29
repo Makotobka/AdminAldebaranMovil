@@ -160,13 +160,16 @@ export class ConexionHttpProvider {
     }
   }
 
-  async getUsuarioPorCaja(IDSU:number,IDPT:number){
+  async getUsuarioPorCaja(IDSU:number,IDPT:number,Fecha:Date){
     const url = this.dirCone+urlAPI.getUsuarioPorCaja;
     try{
       if(this.isOnline){     
-        let parametros:string=IDSU.toString()+"/"+IDPT.toString();      
-        let respuesta = await this.http.get(url+parametros).toPromise();        
+        //console.log("Fehc aneviada ",Fecha.toISOString().split('T')[0]);
+        let parametros:string=IDSU.toString()+"/"+IDPT.toString()+"/"+Fecha.toISOString().split('T')[0];      
+        let respuesta = await this.http.get(url+parametros).toPromise();    
+        
         await this.llenarDatosRespons(respuesta);
+        //console.log(JSON.parse(this.data));
         return true;
       }else{
         return true;
@@ -192,12 +195,48 @@ export class ConexionHttpProvider {
     }
   }
 
-  async getValPunVenta(IDSU:number){
+  async getValPunVenta(IDSU:number,Fecha:Date){
     const url = await this.dirCone+urlAPI.getValPunVen;
     try{
       if(this.isOnline){     
-        let parametros:string=IDSU.toString();
+        let parametros:string=IDSU.toString()+"/"+Fecha.toISOString().split('T')[0];
+        console.log(parametros)
         let respuesta = await this.http.get(url+parametros).toPromise();        
+        await this.llenarDatosRespons(respuesta);
+        return true;
+      }else{
+        return true;
+      }
+    }catch{
+      return false
+    }
+  }
+
+  //getDeudas:"DC/getDeuda/",//-
+  //getProDiaDeuda:"getProDiaDeuda"//-
+
+  async getDeudas(IDSU:number,Accion:string){
+    const url = await this.dirCone+urlAPI.getDeudas;
+    try{
+      if(this.isOnline){     
+        let parametros:string=IDSU.toString()+"/"+Accion;
+        //console.log(parametros)
+        let respuesta = await this.http.get(url+parametros).toPromise();        
+        await this.llenarDatosRespons(respuesta);
+        return true;
+      }else{
+        return true;
+      }
+    }catch{
+      return false
+    }
+  }
+
+  async getPromDeudaDia(){
+    const url = await this.dirCone+urlAPI.getProDiaDeuda;
+    try{
+      if(this.isOnline){     
+        let respuesta = await this.http.get(url).toPromise();        
         await this.llenarDatosRespons(respuesta);
         return true;
       }else{
