@@ -32,7 +32,7 @@
     "@ionic-native/file-path": "^4.15.0",
     "@ionic-native/file-transfer": "^4.15.0",
     "@ionic-native/in-app-browser": "^4.15.0",
-    "@ionic-native/local-notifications": "^4.15.0",
+    "@ionic-native/local-notifications": "^4.16.0",
     "@ionic-native/native-page-transitions": "^4.15.0",
     "@ionic-native/native-storage": "^4.15.0",
     "@ionic-native/photo-library": "^4.15.0",

@@ -13,6 +13,7 @@ import { ConexionHttpProvider } from '../providers/conexion-http/conexion-http';
 import { ArchivoInternosProvider } from '../providers/archivo-internos/archivo-internos';
 import { IonicStorageModule } from '@ionic/storage';
 import { staticConfigStorage } from '../providers/archivo-internos/staticConfigStorage';
+import { ShowMessageProvider } from '../providers/show-message/show-message';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { staticConfigStorage } from '../providers/archivo-internos/staticConfigS
   providers: [
     proveedores,
     ConexionHttpProvider,
-    ArchivoInternosProvider
+    ArchivoInternosProvider,
+    ShowMessageProvider
   ]
 })
 

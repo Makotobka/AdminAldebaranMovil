@@ -12,6 +12,7 @@ import { FilePath } from '@ionic-native/file-path';
 import { InAppBrowser } from '@ionic-native/in-app-browser';
 import { ConexionHttpProvider } from "../providers/conexion-http/conexion-http";
 import { ArchivoInternosProvider } from "../providers/archivo-internos/archivo-internos";
+import { ShowMessageProvider } from "../providers/show-message/show-message";
 
 export const proveedores = [
     StatusBar,
@@ -27,5 +28,6 @@ export const proveedores = [
     InAppBrowser,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     ConexionHttpProvider,
-    ArchivoInternosProvider
+    ArchivoInternosProvider,
+    ShowMessageProvider
 ]
