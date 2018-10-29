@@ -1,1 +1,32 @@
-<ion-nav [root]="rootPage"></ion-nav>
+<ion-menu [content]="content">
+    <ion-content>
+        <ion-list no-lines>
+
+            <ion-list-header>
+                Facturas
+            </ion-list-header>
+
+            <ion-item tappable (click)="goPage('Facturas Actuales')">
+                Facturas Actuales
+            </ion-item>
+            <ion-item tappable (click)="goPage('Facturas por Fechas')">
+                Facturas por Fechas
+            </ion-item>
+
+            <ion-list-header>
+                Stock
+            </ion-list-header>
+
+            <ion-item tappable (click)="goPage('Stock Minimo')">
+                Stock Minimo
+            </ion-item>
+            <ion-item tappable (click)="goPage('Stock Maximo')">
+                Stock Maximo
+            </ion-item>
+
+        </ion-list>
+    </ion-content>
+</ion-menu>
+
+
+<ion-nav [root]="rootPage" #content swipeBackEnabled="false"></ion-nav>

@@ -19,7 +19,7 @@ export class DetalleCajaPage {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad DetalleCajaPage');
+    //console.log('ionViewDidLoad DetalleCajaPage');
   }
 
 }

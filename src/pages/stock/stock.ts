@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Stock, Res_Stock } from '../../estructuras/Stock';
+import { ArchivoInternosProvider } from '../../providers/archivo-internos/archivo-internos';
+import { keyStorage } from '../../providers/archivo-internos/staticConfigStorage';
 
 /**
  * Generated class for the StockPage page.
@@ -19,19 +21,24 @@ export class StockPage {
   public ltStok:Stock[];
   public ltStokResumen:Res_Stock[];
   public ltStockGrupo=[];
+  private estado:boolean;
+  public titulo:string;
 
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
-    this.ltStok = navParams.get("ltStok")
-    this.ltStokResumen = navParams.get("ltStokResumen")
-
-    //console.log(this.ltStok)    
-    //console.log(this.ltStokResumen)    
-    //console.log(this.ltStockGrupo);
+  constructor(private archivo:ArchivoInternosProvider,public navCtrl: NavController, public navParams: NavParams) {
+    this.estado = navParams.get("min");
+    this.titulo = this.navParams.get("titulo");
   }
 
-  ionViewDidLoad() {
-    //console.log('ionViewDidLoad StockPage');
+  async ionViewDidLoad() {
+    if(!this.estado){
+      this.ltStok = await this.archivo.leerArchivo(keyStorage.keyListaStockMax)
+      this.ltStokResumen = await this.archivo.leerArchivo(keyStorage.keyListaStockResumenMax)
+    }else{
+      this.ltStok = await this.archivo.leerArchivo(keyStorage.keyListaStockMin)
+      this.ltStokResumen = await this.archivo.leerArchivo(keyStorage.keyListaStockResumenMin)
+    }
+    
     this.cargarDatosGrupo();
   }
 

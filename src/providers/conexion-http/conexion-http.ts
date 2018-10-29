@@ -47,7 +47,6 @@ export class ConexionHttpProvider {
   }
 
   llenarDatosRespons(respuesta:any){
-    //console.log(respuesta)
     this.data = respuesta._body;
     this.mensaje = respuesta.statusText;
     this.codigo = respuesta.status;
@@ -69,7 +68,6 @@ export class ConexionHttpProvider {
         let parametros:string;
         this.formatearHeaders(RequestMethod.Get,ResponseContentType.Json);
         parametros +=IDSU+"/"+EST;
-        console.log(this.dirCone+urlAPI.getCajasAbiertasCerradas+parametros);
         let respuesta = await this.http.get(this.dirCone+urlAPI.getCajasAbiertasCerradas+parametros).toPromise();
         await this.llenarDatosRespons(respuesta);
         return true;
@@ -87,23 +85,23 @@ export class ConexionHttpProvider {
     try{
       if(this.isOnline){
         let parametros:string = await Accion+"/"+FechaIni+"/"+FechaFin+"/"+IDSU;   
-        //console.log(parametros)     
-        let respuesta = await this.http.get(url+parametros).toPromise();        
+        let respuesta = await this.http.get(url+parametros).toPromise();    
         await this.llenarDatosRespons(respuesta);
         return true;
       }else{
         return true;
       }
-    }catch{
+    }catch (e){
+      await this.llenarDatosRespons(e);
       return false
     }
   }
 
-  async getStockBajo(IDSU:number){
+  async getStockBajo(IDSU:number,ACC:String){
     const url = this.dirCone+urlAPI.getStockBajo;
     try{
       if(this.isOnline){
-        let parametros:string=IDSU.toString();        
+        let parametros:string=IDSU.toString()+"/"+ACC;
         let respuesta = await this.http.get(url+parametros).toPromise();        
         await this.llenarDatosRespons(respuesta);
         return true;
@@ -115,11 +113,11 @@ export class ConexionHttpProvider {
     }
   }
 
-  async getResStockBajo(IDSU:number){
+  async getResStockBajo(IDSU:number,ACC:String){
     const url = this.dirCone+urlAPI.getResumenStockBajo;
     try{
       if(this.isOnline){
-        let parametros:string=IDSU.toString();        
+        let parametros:string=IDSU.toString()+"/"+ACC;        
         let respuesta = await this.http.get(url+parametros).toPromise();        
         await this.llenarDatosRespons(respuesta);
         return true;
@@ -145,4 +143,69 @@ export class ConexionHttpProvider {
       return false
     }
   }
+
+  async getFactAnuales(Accion:string, IDSU:number, AñoActual:boolean){
+    const url = this.dirCone+urlAPI.getFacCVAños;
+    try{
+      if(this.isOnline){     
+        let parametros:string=Accion+"/"+IDSU+"/"+AñoActual;        
+        let respuesta = await this.http.get(url+parametros).toPromise();        
+        await this.llenarDatosRespons(respuesta);
+        return true;
+      }else{
+        return true;
+      }
+    }catch{
+      return false
+    }
+  }
+
+  async getUsuarioPorCaja(IDSU:number,IDPT:number){
+    const url = this.dirCone+urlAPI.getUsuarioPorCaja;
+    try{
+      if(this.isOnline){     
+        let parametros:string=IDSU.toString()+"/"+IDPT.toString();      
+        let respuesta = await this.http.get(url+parametros).toPromise();        
+        await this.llenarDatosRespons(respuesta);
+        return true;
+      }else{
+        return true;
+      }
+    }catch{
+      return false
+    }
+  }
+
+  async getPuntosVenta(IDSU:number){
+    const url = await this.dirCone+urlAPI.getPunVenta;
+    try{
+      if(this.isOnline){     
+        let parametros:string=IDSU.toString();   
+        let respuesta = await this.http.get(url+parametros).toPromise();        
+        await this.llenarDatosRespons(respuesta);
+        return true;
+      }else{
+        return true;
+      }
+    }catch{
+      return false
+    }
+  }
+
+  async getValPunVenta(IDSU:number){
+    const url = await this.dirCone+urlAPI.getValPunVen;
+    try{
+      if(this.isOnline){     
+        let parametros:string=IDSU.toString();
+        let respuesta = await this.http.get(url+parametros).toPromise();        
+        await this.llenarDatosRespons(respuesta);
+        return true;
+      }else{
+        return true;
+      }
+    }catch{
+      return false
+    }
+  }
+  
 }

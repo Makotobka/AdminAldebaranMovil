@@ -11,6 +11,7 @@ import { FileOpener } from '@ionic-native/file-opener';
 import { FilePath } from '@ionic-native/file-path';
 import { InAppBrowser } from '@ionic-native/in-app-browser';
 import { ConexionHttpProvider } from "../providers/conexion-http/conexion-http";
+import { ArchivoInternosProvider } from "../providers/archivo-internos/archivo-internos";
 
 export const proveedores = [
     StatusBar,
@@ -25,5 +26,6 @@ export const proveedores = [
     FileOpener,
     InAppBrowser,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    ConexionHttpProvider
+    ConexionHttpProvider,
+    ArchivoInternosProvider
 ]

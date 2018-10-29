@@ -7,13 +7,29 @@
 <ion-header>
 
     <ion-navbar>
-        <ion-title>Detalle de Facturas</ion-title>
+        <ion-title class="TextoCentrado">{{titulo}}</ion-title>
     </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
+
+    <ion-card *ngIf="!estado">
+        <ion-item>
+            <ion-label>Inicio</ion-label>
+            <ion-datetime class="TextoJustificado" displayFormat="MMM DD YYYY" [(ngModel)]="FechaIni"></ion-datetime>
+        </ion-item>
+
+        <ion-item>
+            <ion-label>Fin</ion-label>
+            <ion-datetime class="TextoJustificado" displayFormat="MMM DD YYYY" [(ngModel)]="FechaFin"></ion-datetime>
+        </ion-item>
+        <div text-center>
+            <button on-click="getResumenFacV()" end ion-button round>Round Button</button>
+        </div>
+    </ion-card>
+
 
     <ion-card class="cardTable">
         <ion-card-header on-click="desplFV=!desplFV">
@@ -49,8 +65,6 @@
                 </ion-row>
             </ion-grid>
         </ion-card-content>
-
-
     </ion-card>
 
     <ion-card class="cardTable">
