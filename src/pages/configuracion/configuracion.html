@@ -35,8 +35,13 @@
 
         <ion-item>
             <button ion-item (click)="Guardar()">
-          Guardar Informacion
-        </button>
+                Guardar Informacion
+            </button>
+        </ion-item>
+
+        <ion-item>
+            <ion-label>Conectado</ion-label>
+            <ion-toggle [(ngModel)]="isDisabled" (ionChange)="isDisabled = !isDisabled"></ion-toggle>
         </ion-item>
     </ion-list>
 </ion-content>

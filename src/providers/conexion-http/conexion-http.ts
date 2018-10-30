@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Http, RequestOptions, ResponseContentType, Headers, RequestMethod } from '@angular/http';
 import { urlAPI } from './app.URLAPI';
+import { ArchivoInternosProvider } from '../archivo-internos/archivo-internos';
+import { keyStorage } from '../archivo-internos/staticConfigStorage';
 
 /*
   Generated class for the ConexionHttpProvider provider.
@@ -21,7 +23,7 @@ export class ConexionHttpProvider {
   public data:any;
   public isOnline;
 
-  constructor(public http: Http) {    
+  constructor(public http: Http, public archivo:ArchivoInternosProvider) {    
     this.isOnline=true;
   }
 
@@ -89,6 +91,11 @@ export class ConexionHttpProvider {
         await this.llenarDatosRespons(respuesta);
         return true;
       }else{
+        if(Accion ==='C'){
+          this.data = await JSON.stringify(this.archivo.leerArchivo(keyStorage.keylistFC))
+        }else{
+          this.data = await JSON.stringify(this.archivo.leerArchivo(keyStorage.keylistFV))
+        }        
         return true;
       }
     }catch (e){
@@ -106,6 +113,12 @@ export class ConexionHttpProvider {
         await this.llenarDatosRespons(respuesta);
         return true;
       }else{
+        if(ACC==='B'){
+          this.data = await JSON.stringify(this.archivo.leerArchivo(keyStorage.keyListaStockMin))
+        }else{
+          this.data = await JSON.stringify(this.archivo.leerArchivo(keyStorage.keyltstokMax))
+        }
+        
         return true;
       }
     }catch{
@@ -122,6 +135,12 @@ export class ConexionHttpProvider {
         await this.llenarDatosRespons(respuesta);
         return true;
       }else{
+        if(ACC==='B'){
+          this.data = await JSON.stringify(this.archivo.leerArchivo(keyStorage.keyListaStockResumenMin))
+        }else{
+          this.data = await JSON.stringify(this.archivo.leerArchivo(keyStorage.keyListaStockResumenMax))
+        }
+        
         return true;
       }
     }catch{
@@ -153,6 +172,11 @@ export class ConexionHttpProvider {
         await this.llenarDatosRespons(respuesta);
         return true;
       }else{
+        if(Accion==='V'){
+          this.data = await JSON.stringify(this.archivo.leerArchivo(keyStorage.keydataAñosV))
+        }else{
+          this.data = await JSON.stringify(this.archivo.leerArchivo(keyStorage.keydataAñosC))
+        }
         return true;
       }
     }catch{
@@ -166,13 +190,12 @@ export class ConexionHttpProvider {
       if(this.isOnline){     
         //console.log("Fehc aneviada ",Fecha.toISOString().split('T')[0]);
         let parametros:string=IDSU.toString()+"/"+IDPT.toString()+"/"+Fecha.toISOString().split('T')[0];      
-        let respuesta = await this.http.get(url+parametros).toPromise();    
-        
+        let respuesta = await this.http.get(url+parametros).toPromise();            
         await this.llenarDatosRespons(respuesta);
         //console.log(JSON.parse(this.data));
         return true;
       }else{
-        return true;
+        return false;
       }
     }catch{
       return false
@@ -188,6 +211,7 @@ export class ConexionHttpProvider {
         await this.llenarDatosRespons(respuesta);
         return true;
       }else{
+        this.data = await JSON.stringify(this.archivo.leerArchivo(keyStorage.keyltPV))
         return true;
       }
     }catch{
@@ -205,6 +229,7 @@ export class ConexionHttpProvider {
         await this.llenarDatosRespons(respuesta);
         return true;
       }else{
+        this.data = await JSON.stringify(this.archivo.leerArchivo(keyStorage.keyltValCaja));
         return true;
       }
     }catch{
@@ -225,6 +250,17 @@ export class ConexionHttpProvider {
         await this.llenarDatosRespons(respuesta);
         return true;
       }else{
+        switch(Accion){
+          case "RESCOBRAR":
+            this.data = await JSON.stringify(this.archivo.leerArchivo(keyStorage.keyListaResumenDeudaCliente));
+          break;
+          case "COBRAR":
+            this.data = await JSON.stringify(this.archivo.leerArchivo(keyStorage.keyListaDeudaCliente));
+          break;
+          case "PAGAR":
+            this.data = await JSON.stringify(this.archivo.leerArchivo(keyStorage.keyListaDeudaEmpresa));
+          break;
+        }
         return true;
       }
     }catch{
@@ -240,6 +276,7 @@ export class ConexionHttpProvider {
         await this.llenarDatosRespons(respuesta);
         return true;
       }else{
+        this.data = await JSON.stringify(this.archivo.leerArchivo(keyStorage.keypromedioUsuarioPago));
         return true;
       }
     }catch{

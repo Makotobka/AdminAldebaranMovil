@@ -30,6 +30,8 @@ export class DashboardGeneralPage {
   private Sucursal:any={"ID":1,"CIUDAD":"EL EMPALME","AGENCIA": "FARMACIA JAVIER JR"};
 
   //#region Facturas
+    private dataAñosC;
+    private dataAñosV;
     public listFC;
     public listFV;
     public totalFC;
@@ -279,6 +281,13 @@ export class DashboardGeneralPage {
     await this.archivo.escribirArchivo(keyStorage.keyListaResumenDeudaCliente,this.ltDeudaResCobro);
     await this.archivo.escribirArchivo(keyStorage.keyListaDeudaCliente,this.ltDeudaCobro);
     await this.archivo.escribirArchivo(keyStorage.keyListaDeudaEmpresa,this.ltDeudaPagar);
+    await this.archivo.escribirArchivo(keyStorage.keyltstokMax,this.ltstokMax);
+    await this.archivo.escribirArchivo(keyStorage.keydataAñosV,this.dataAñosV);
+    await this.archivo.escribirArchivo(keyStorage.keydataAñosC,this.dataAñosC);
+    await this.archivo.escribirArchivo(keyStorage.keyltPV,this.ltPV);
+    await this.archivo.escribirArchivo(keyStorage.keypromedioUsuarioPago,this.promedioUsuarioPago);
+    await this.archivo.escribirArchivo(keyStorage.keylistFC,this.listFV);
+    await this.archivo.escribirArchivo(keyStorage.keylistFV,this.listFC);
     
     console.log("Guardado completo")
   }
@@ -299,17 +308,13 @@ export class DashboardGeneralPage {
 
   async getPuntoVenta(IDSU){
     await this.con.getPuntosVenta(IDSU).then(async (resA)=>{
-      //console.log(resA)
       if(resA){
         this.ltPV = await JSON.parse(this.con.data);
-        //console.log(this.ltPV)
         if(this.ltPV.length>0){
           let tempFecha = new Date();
           await this.con.getValPunVenta(IDSU,tempFecha).then(async res=>{
-            //console.log(res)
             if(res){
               this.ltValCaja = await JSON.parse(this.con.data); 
-              //console.log(this.ltValCaja)
               if(this.ltValCaja.length>0){
                 await this.selectPV(this.ltValCaja[0]);              
               }
@@ -395,18 +400,18 @@ export class DashboardGeneralPage {
   async getFacCVAños(){
     await this.con.getFactAnuales("V",1,true).then(async (resV)=>{
       if(resV){
-        let dataAñosV = await JSON.parse(this.con.data) 
+        this.dataAñosV = await JSON.parse(this.con.data) 
         await this.con.getFactAnuales("C",1,true).then(async (resC)=>{
           if(resC){
-            let dataAñosC = await JSON.parse(this.con.data) 
+            this.dataAñosC = await JSON.parse(this.con.data) 
             let facVenta=[];
             let facCompra=[];
             let dataLabel=[]
             let totalV=0,totalC=0;
 
-            for (let index = 0; index < dataAñosV.length; index++) {
-              const elementV = dataAñosV[index];
-              const elementC = dataAñosC[index];
+            for (let index = 0; index < this.dataAñosV.length; index++) {
+              const elementV =  this.dataAñosV[index];
+              const elementC =  this.dataAñosC[index];
               this.barChartLabels.push(elementV.Meses)
               totalC = totalC.valueOf()+elementC.Total.valueOf();
               totalV = totalV.valueOf()+elementV.Total.valueOf();
@@ -418,8 +423,8 @@ export class DashboardGeneralPage {
             dataDatos.push({data:facVenta,label:"Ventas"});
             dataDatos.push({data:facCompra,label:"Compras"});
             this.barChartData = await dataDatos;
-            this.totalFC = totalC.valueOf()/dataAñosV.length.valueOf();
-            this.totalFV = totalV.valueOf()/dataAñosV.length.valueOf();
+            this.totalFC = totalC.valueOf()/this.dataAñosV.length.valueOf();
+            this.totalFV = totalV.valueOf()/this.dataAñosV.length.valueOf();
           }
         });
       }
@@ -511,18 +516,18 @@ export class DashboardGeneralPage {
     }
     this.CanvasDeuda.update()
     //#endregion
-    await this.archivo.escribirArchivo(keyStorage.keySucursal,undefined);  //Se usa en facturas
-    await this.archivo.escribirArchivo(keyStorage.keyListaStockMin,undefined);  //Se usa en stock
-    await this.archivo.escribirArchivo(keyStorage.keyListaStockResumenMin,undefined);  //Se usa en stock
-    await this.archivo.escribirArchivo(keyStorage.keyListaStockMax,undefined);  //Se usa en stock
-    await this.archivo.escribirArchivo(keyStorage.keyListaStockResumenMax,undefined);  //Se usa en stock
+    //await this.archivo.escribirArchivo(keyStorage.keySucursal,undefined);  //Se usa en facturas
+    //await this.archivo.escribirArchivo(keyStorage.keyListaStockMin,undefined);  //Se usa en stock
+    //await this.archivo.escribirArchivo(keyStorage.keyListaStockResumenMin,undefined);  //Se usa en stock
+    //await this.archivo.escribirArchivo(keyStorage.keyListaStockMax,undefined);  //Se usa en stock
+    //await this.archivo.escribirArchivo(keyStorage.keyListaStockResumenMax,undefined);  //Se usa en stock
 
 
   }
   
   async getUsuarioCaja(IDSU,IDPT){
     let sdw = new Date()
-    console.log(sdw)
+    //console.log(sdw)
     await this.con.getUsuarioPorCaja(IDSU,IDPT,sdw).then(async res=>{      
       if(res){
         let UserCaja = await JSON.parse(this.con.data);

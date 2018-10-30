@@ -6,9 +6,19 @@ export const keyStorage = {
     keyListaStockResumenMax:"keyListaStockResumenMax",
     keyListaDeudaCliente:"keyListaDeudaCliente",
     keyListaResumenDeudaCliente:"keyListaResumenDeudaCliente",
-    keyListaDeudaEmpresa:"keyListaDeudaEmpresa"
+    keyListaDeudaEmpresa:"keyListaDeudaEmpresa",
+    keyltstokMax:"keyltstokMax",
+    keydataAñosV:"keydataAñosV",
+    keydataAñosC:"keydataAñosC",
+    keyltPV:"keyltPV",
+    keylistFV:"keylistFV",
+    keylistFC:"keylistFC",
+    keypromedioUsuarioPago:"keypromedioUsuarioPago",
+    keyltValCaja:"keyltValCaja",
+
+    keyIsOnline:"keyIsOnline"
 };
-  
+
 export const staticConfigStorage = {
     name: 'data.int',
     driverOrder: ['sqlite','indexeddb','websql']

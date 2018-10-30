@@ -16,6 +16,7 @@ import { ConexionHttpProvider } from '../../providers/conexion-http/conexion-htt
 })
 export class ConfiguracionPage {
 
+  public isDisabled;
   public FechaIni;
   public FechaFin;
   public Sucursal;  
@@ -32,6 +33,8 @@ export class ConfiguracionPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad ConfiguracionPage');
+    this.isDisabled = this.con.isOnline;
+    console.log("E A ",this.con.isOnline)
     this.cargarSucursales();
   }
 
@@ -57,8 +60,19 @@ export class ConfiguracionPage {
     if(tempSuc===undefined){
       tempSuc={"ID":1,"AGENCIA":"No Seleccionado"};
     }
-
+    this.con.isOnline = this.isDisabled;
+    console.log("E G ",this.con.isOnline)
     this.view.dismiss({"FechaFin":tempFin,"FechaIni":tempIni,"Sucursal":tempSuc})
+  }
+
+  getEstado(){
+    if(this.con.isOnline){
+      console.log("A")
+      return "Conectado";
+    }else{
+      console.log("A")
+      return "Desconectado";
+    }
   }
 
 }
