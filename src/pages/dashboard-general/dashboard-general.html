@@ -172,3 +172,21 @@
         </ion-card-content>
     </ion-card>
 </ion-content>
+
+<ion-footer>
+    <ion-toolbar color="light">
+        <ion-label>
+            Ultima Actualizacion: {{FechaIni | date}}
+        </ion-label>
+        <ion-buttons end>
+            <button ion-button icon-only>
+                <ion-label *ngIf="con.isOnline" style="color: green">
+                    Online
+                </ion-label>
+                <ion-label *ngIf="!con.isOnline" style="color: red">
+                    Offline
+                </ion-label>
+            </button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-footer>

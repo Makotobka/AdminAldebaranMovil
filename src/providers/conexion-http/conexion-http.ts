@@ -90,12 +90,14 @@ export class ConexionHttpProvider {
         let respuesta = await this.http.get(url+parametros).toPromise();    
         await this.llenarDatosRespons(respuesta);
         return true;
-      }else{
+      }else{                
+        let temp;
         if(Accion ==='C'){
-          this.data = await JSON.stringify(this.archivo.leerArchivo(keyStorage.keylistFC))
+          temp = await this.archivo.leerArchivo(keyStorage.keylistFC)
         }else{
-          this.data = await JSON.stringify(this.archivo.leerArchivo(keyStorage.keylistFV))
+          temp = await this.archivo.leerArchivo(keyStorage.keylistFV)
         }        
+        this.data = await JSON.stringify(temp);
         return true;
       }
     }catch (e){
@@ -113,11 +115,13 @@ export class ConexionHttpProvider {
         await this.llenarDatosRespons(respuesta);
         return true;
       }else{
+        let temp;
         if(ACC==='B'){
-          this.data = await JSON.stringify(this.archivo.leerArchivo(keyStorage.keyListaStockMin))
+          temp = await this.archivo.leerArchivo(keyStorage.keyListaStockMin)
         }else{
-          this.data = await JSON.stringify(this.archivo.leerArchivo(keyStorage.keyltstokMax))
+          temp = await this.archivo.leerArchivo(keyStorage.keyListaStockMax)
         }
+        this.data = await JSON.stringify(temp);
         
         return true;
       }
@@ -135,11 +139,14 @@ export class ConexionHttpProvider {
         await this.llenarDatosRespons(respuesta);
         return true;
       }else{
+        let temp
         if(ACC==='B'){
-          this.data = await JSON.stringify(this.archivo.leerArchivo(keyStorage.keyListaStockResumenMin))
+          temp = await this.archivo.leerArchivo(keyStorage.keyListaStockResumenMin)
         }else{
-          this.data = await JSON.stringify(this.archivo.leerArchivo(keyStorage.keyListaStockResumenMax))
+          temp = await this.archivo.leerArchivo(keyStorage.keyListaStockResumenMax)
         }
+        console.log(temp);
+        this.data = await JSON.stringify(temp);
         
         return true;
       }
@@ -163,7 +170,7 @@ export class ConexionHttpProvider {
     }
   }
 
-  async getFactAnuales(Accion:string, IDSU:number, AñoActual:boolean){
+  async getFactAnuales(Accion:string, IDSU:number, AñoActual:number){
     const url = this.dirCone+urlAPI.getFacCVAños;
     try{
       if(this.isOnline){     
@@ -172,11 +179,13 @@ export class ConexionHttpProvider {
         await this.llenarDatosRespons(respuesta);
         return true;
       }else{
+        let temp
         if(Accion==='V'){
-          this.data = await JSON.stringify(this.archivo.leerArchivo(keyStorage.keydataAñosV))
+          temp = await this.archivo.leerArchivo(keyStorage.keydataAñosV)
         }else{
-          this.data = await JSON.stringify(this.archivo.leerArchivo(keyStorage.keydataAñosC))
+          temp = await this.archivo.leerArchivo(keyStorage.keydataAñosC)
         }
+        this.data = await JSON.stringify(temp);
         return true;
       }
     }catch{
@@ -210,8 +219,9 @@ export class ConexionHttpProvider {
         let respuesta = await this.http.get(url+parametros).toPromise();        
         await this.llenarDatosRespons(respuesta);
         return true;
-      }else{
-        this.data = await JSON.stringify(this.archivo.leerArchivo(keyStorage.keyltPV))
+      }else{        
+        let temp = await this.archivo.leerArchivo(keyStorage.keyltPV)        
+        this.data = await JSON.stringify(temp);
         return true;
       }
     }catch{
@@ -229,7 +239,8 @@ export class ConexionHttpProvider {
         await this.llenarDatosRespons(respuesta);
         return true;
       }else{
-        this.data = await JSON.stringify(this.archivo.leerArchivo(keyStorage.keyltValCaja));
+        let temp = await this.archivo.leerArchivo(keyStorage.keyltValCaja);
+        this.data = JSON.stringify(temp);
         return true;
       }
     }catch{
@@ -250,17 +261,19 @@ export class ConexionHttpProvider {
         await this.llenarDatosRespons(respuesta);
         return true;
       }else{
-        switch(Accion){
+        let temp;
+        switch(Accion){          
           case "RESCOBRAR":
-            this.data = await JSON.stringify(this.archivo.leerArchivo(keyStorage.keyListaResumenDeudaCliente));
+            temp = await this.archivo.leerArchivo(keyStorage.keyListaResumenDeudaCliente);
           break;
           case "COBRAR":
-            this.data = await JSON.stringify(this.archivo.leerArchivo(keyStorage.keyListaDeudaCliente));
+            temp = await this.archivo.leerArchivo(keyStorage.keyListaDeudaCliente);
           break;
           case "PAGAR":
-            this.data = await JSON.stringify(this.archivo.leerArchivo(keyStorage.keyListaDeudaEmpresa));
+            temp = await this.archivo.leerArchivo(keyStorage.keyListaDeudaEmpresa);
           break;
         }
+        this.data = JSON.stringify(temp);
         return true;
       }
     }catch{
@@ -276,7 +289,8 @@ export class ConexionHttpProvider {
         await this.llenarDatosRespons(respuesta);
         return true;
       }else{
-        this.data = await JSON.stringify(this.archivo.leerArchivo(keyStorage.keypromedioUsuarioPago));
+        let temp = await this.archivo.leerArchivo(keyStorage.keypromedioUsuarioPago);        
+        this.data = await JSON.stringify(temp)
         return true;
       }
     }catch{

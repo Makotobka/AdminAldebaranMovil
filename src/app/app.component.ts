@@ -43,9 +43,13 @@ export class MyApp {
       case "Stock Maximo":
         modalPage = this.modal.create(StockPage,{min:false,titulo:"Stock Maximo"});      
       break;
-      case "Clientes Adeudores":
-        modalPage = this.modal.create(ListaDeudaPage);
+      case "Deudas de Clientes":
+        modalPage = this.modal.create(ListaDeudaPage,{isCliente:true});
       break;
+      case "Deudas a Proveedores":
+        modalPage = this.modal.create(ListaDeudaPage,{isCliente:false});
+      break;
+
     }
     modalPage.present();
   }

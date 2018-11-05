@@ -8,14 +8,15 @@
 
     <ion-navbar>
         <ion-title>listaDeuda</ion-title>
+
     </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
-
-    <ion-card class="cardTable" *ngFor="let item of ltDeudaResCliente">
+    <ion-searchbar></ion-searchbar>
+    <ion-card class="cardTable" *ngFor="let item of listaData">
         <ion-card-header on-click="item.desplFC=!item.desplFC">
             <ion-item>
                 <ion-label>
@@ -29,7 +30,7 @@
             </ion-item>
         </ion-card-header>
         <ion-card-content *ngIf="item.desplFC">
-            <ion-list>
+            <ion-list *ngIf="isCliente">
                 <ion-item>
                     <ion-label class="TextoJustificado">
                         N° Factura
@@ -46,7 +47,7 @@
                         {{elemet.IDF}}
                     </ion-label>
                     <ion-label class="TextoJustificado">
-                        {{elemet.Fecha}}
+                        {{elemet.Fecha | date}}
                     </ion-label>
                     <ion-label class="alineadoIzq">
                         $ {{elemet.Deuda}}

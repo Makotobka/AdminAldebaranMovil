@@ -31,6 +31,7 @@ export class StockPage {
   }
 
   async ionViewDidLoad() {
+
     if(!this.estado){
       this.ltStok = await this.archivo.leerArchivo(keyStorage.keyListaStockMax)
       this.ltStokResumen = await this.archivo.leerArchivo(keyStorage.keyListaStockResumenMax)
@@ -38,7 +39,8 @@ export class StockPage {
       this.ltStok = await this.archivo.leerArchivo(keyStorage.keyListaStockMin)
       this.ltStokResumen = await this.archivo.leerArchivo(keyStorage.keyListaStockResumenMin)
     }
-    
+    //console.log(this.ltStok)
+    //console.log(this.ltStokResumen)
     this.cargarDatosGrupo();
   }
 
@@ -59,6 +61,7 @@ export class StockPage {
           }
         }
 
+        //this.orderLista(item);
         if(isExisxt){
           this.ltStockGrupo.push({"Grupo":item.Grupo,"lista":[item]})  
         }
@@ -80,6 +83,18 @@ export class StockPage {
       }
     }    
     return cantidad;
+  }
+
+  orderLista(lista:any[]){
+    for (let i = 0; i < lista.length; i++) {
+      for (let j = i+1; j < lista.length; j++) {
+        if(lista[i].Deuda.valueOf()<=lista[j].Deuda.valueOf()){
+          const temp = lista[i];
+          lista[i] = lista[j];
+          lista[j] = temp;            
+        }
+      }
+    }
   }
   
 }

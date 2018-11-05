@@ -6,16 +6,14 @@ export const keyStorage = {
     keyListaStockResumenMax:"keyListaStockResumenMax",
     keyListaDeudaCliente:"keyListaDeudaCliente",
     keyListaResumenDeudaCliente:"keyListaResumenDeudaCliente",
-    keyListaDeudaEmpresa:"keyListaDeudaEmpresa",
-    keyltstokMax:"keyltstokMax",
+    keyListaDeudaEmpresa:"keyListaDeudaEmpresa",    
     keydataAñosV:"keydataAñosV",
     keydataAñosC:"keydataAñosC",
     keyltPV:"keyltPV",
     keylistFV:"keylistFV",
     keylistFC:"keylistFC",
     keypromedioUsuarioPago:"keypromedioUsuarioPago",
-    keyltValCaja:"keyltValCaja",
-
+    keyltValCaja:"keyltValCaja",    
     keyIsOnline:"keyIsOnline"
 };
 

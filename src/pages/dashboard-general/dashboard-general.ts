@@ -13,6 +13,8 @@ import { ArchivoInternosProvider } from '../../providers/archivo-internos/archiv
 import { keyStorage } from '../../providers/archivo-internos/staticConfigStorage';
 import { Deuda } from '../../estructuras/Deuda';
 import { templateJitUrl } from '@angular/compiler';
+import { ShowMessageProvider } from '../../providers/show-message/show-message';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 /**
  * Generated class for the DashboardGeneralPage page.
@@ -27,7 +29,7 @@ import { templateJitUrl } from '@angular/compiler';
   templateUrl: 'dashboard-general.html',
 })
 export class DashboardGeneralPage {
-  private Sucursal:any={"ID":1,"CIUDAD":"EL EMPALME","AGENCIA": "FARMACIA JAVIER JR"};
+  private Sucursal={"ID":0,"CIUDAD":"DESCONOCIDA","AGENCIA":"DESCONOCIDA"};
 
   //#region Facturas
     private dataAñosC;
@@ -66,14 +68,14 @@ export class DashboardGeneralPage {
   //{data: [65, 59, 80, 81, 56, 55, 40], label: 'Series A'},
   //#endregion
   //#region Stock
-    public ltstockMinRes:any;
-    public ltstockMaxRes:any;
-    public ltstokMin:any;
-    public ltstokMax:any;
-    public appType="Minimos";
+    public ltstockMinRes:any=[];
+    public ltstockMaxRes:any=[];
+    public ltstokMin:any=[];
+    public ltstokMax:any=[];
+    public appType = "Minimos";
     private cantMinMostrar=10;
-    public ltStok:Stock[];
-    public ltStokResumen:Res_Stock[];
+    public ltStok:Stock[]=[];
+    public ltStokResumen:Res_Stock[]=[];
     public totalStock;
     public GrupoMayorStockBajo: Res_Stock = {Cantidad:0,Grupo:"Desconocido"};    
     public StockchartColor: any[] =  [{backgroundColor:['#d53e4f','#f46d43','#fdae61','#e6f598','#abdda4','#66c2a5','#3288bd','#5e4fa2','#2ecc71','#edd400','#586e75']}]; 
@@ -125,48 +127,65 @@ export class DashboardGeneralPage {
     public promedioUsuarioPago:any[]=[];
   //#endregion
 
-  constructor(private archivo:ArchivoInternosProvider,public modal:ModalController ,public con:ConexionHttpProvider,public navCtrl: NavController, public navParams: NavParams) {
+  constructor(private show:ShowMessageProvider,private archivo:ArchivoInternosProvider,public modal:ModalController ,public con:ConexionHttpProvider,public navCtrl: NavController, public navParams: NavParams) {
     let temp: string = new Date().toISOString();
     let tempAux = temp.split("T")[0];
     this.FechaFin = tempAux;
-    this.FechaIni = tempAux;    
-   
+    this.FechaIni = tempAux;
   }
 
-  refrescarGraficos(){
-
-  }
-
-  async selectOp(val:number){
-    if(val===1){
-      this.ltStokResumen = this.ltstockMinRes;
-      this.ltStok = this.ltstokMin;
+  async selectOp(val:number){    
+    if(val === 1){
+      if(this.ltstockMinRes.length>0){
+        this.ltStokResumen = this.ltstockMinRes;
+      }
+      if(this.ltstokMin.length>0){
+        this.ltStok = this.ltstokMin;
+      }     
     }else{
-      this.ltStokResumen = this.ltstockMaxRes;
-      this.ltStok = this.ltstokMax;
+      if(this.ltstockMaxRes.length>0){
+        this.ltStokResumen = this.ltstockMaxRes;
+      }
+      if(this.ltstokMax.length>0){
+        this.ltStok = this.ltstokMax;
+      }
     }
 
     await this.contarDatosStock();
     await this.llenarDatosGraficoStock();
   }
 
-  ionViewDidLoad() {
-    this.goSincronizar(false);
+  async ionViewDidLoad() {
+    //await this.show.detenerTiempo();
+    this.Sucursal = await this.archivo.leerArchivo(keyStorage.keySucursal);    
+    console.log(this.Sucursal);
+    if(this.Sucursal === null || this.Sucursal === undefined){
+      this.Sucursal = {"ID":0,"CIUDAD":"DESCONOCIDA","AGENCIA":"DESCONOCIDA"};
+    }
+
+    if(this.Sucursal.ID.valueOf()!==0){
+      this.goSincronizar(false);
+    }else{
+      this.show.showAlertTitulo("No hay una sucursal seleccionada","ERROR");
+    }
+    
   }
 
-  getResumenFacV(){    
-    this.con.getResFac("V",this.FechaIni,this.FechaFin,this.Sucursal.ID).then(async (resV)=>{
-      if(resV){
+  getResumenFacV(){        
+    this.show.changeContentLoading("Generando Resumenes de Ventas");
+    this.con.getResFac("V",this.FechaIni,this.FechaIni,this.Sucursal.ID).then(async (resV)=>{
+        if(resV){
         this.listFV = await JSON.parse(this.con.data);     
         this.totalFV = await this.getSumatoria(this.listFV)
-        this.con.getResFac("C",this.FechaIni,this.FechaFin,this.Sucursal.ID).then(async (resC)=>{
+        this.show.changeContentLoading("Generando Resumenes de Compras");
+        this.con.getResFac("C",this.FechaIni,this.FechaIni,this.Sucursal.ID).then(async (resC)=>{
           if(resC){
             this.listFC = await JSON.parse(this.con.data);
             this.totalFC = await this.getSumatoria(this.listFC);
             this.FacChartLabels = ["Ventas","Compras"];
             this.FacChartData = [this.totalFV, this.totalFC];    
           }else{
-            //console.log("Mensaje: ",this.con.mensaje,"\NCodigo: ",this.con.codigo)
+
           }
          
         });      
@@ -191,53 +210,50 @@ export class DashboardGeneralPage {
     goPage.present();
   }
 
-  async goSincronizar(isTap:boolean){    
-    if(isTap){
-      this.barChartLabels=[];
-    }
-    await this.limpiarDatos();
-    //await this.getUsuarioCaja(this.Sucursal.ID,1);
-    await this.getStockBajo();
-    await this.getStockAlto();
-    await this.getFacCVAños();
-    await this.getPuntoVenta(this.Sucursal.ID);
-    await this.getDeudas(this.Sucursal.ID);
-
-    await this.guardarInformacion();
-    await this.refrescarGraficos();
+  async goSincronizar(isTap:boolean){   
+      await this.show.detenerTiempo();      
+      this.barChartLabels=await [];
+      await this.limpiarDatos(); 
+      await this.getStock(); 
+      await this.getFacCVAños();
+      //await this.getResumenFacV();
+      await this.getPuntoVenta(this.Sucursal.ID);
+      await this.getDeudas(this.Sucursal.ID);
+      await this.guardarInformacion();
+      
   }
 
   goConfigurar(){
-    let config = this.modal.create(ConfiguracionPage,{"FechaFin":this.FechaFin,"FechaIni":this.FechaIni});
+    let config = this.modal.create(ConfiguracionPage,{"FechaFin":this.FechaFin,"FechaIni":this.FechaIni,"Sucursal":this.Sucursal});
     config.present();
-    config.onDidDismiss((data)=>{
+    config.onDidDismiss(async (data)=>{
      
       if(data!==null && data!==undefined){
         this.FechaFin = data.FechaFin
         this.FechaIni = data.FechaIni
-        this.Sucursal = data.Sucursal;
+        this.Sucursal = data.Sucursal;        
         this.goSincronizar(false);
       }      
     })
   }
 
   async getDeudas(IDSU){    
+    this.show.changeContentLoading("Buscando Deudas a Pagar")
     await this.con.getDeudas(IDSU,"RESCOBRAR").then(async resRC=>{
       if(resRC){
          this.ltDeudaResCobro = await JSON.parse(this.con.data);
         await this.con.getDeudas(IDSU,"COBRAR").then(async resC=>{
           if(resC){
              this.ltDeudaCobro = await JSON.parse(this.con.data);
+             this.show.changeContentLoading("Buscando Deudas a Cobrar")
             await this.con.getDeudas(IDSU,"PAGAR").then(async resP=>{
               if(resP){
-                 this.ltDeudaPagar = await JSON.parse(this.con.data);
+                this.ltDeudaPagar = await JSON.parse(this.con.data);
                 await this.con.getPromDeudaDia().then(async resPro=>{
                   if(resPro){
                     this.promedioUsuarioPago = await JSON.parse(this.con.data);
-                    //console.log(this.promedioUsuarioPago);
                     this.minimoProPago=10000;
                     this.maximoProPago=0;
-
                     await this.promedioUsuarioPago.forEach(elemet=>{
                       this.totalProDiaDeuda = this.totalProDiaDeuda.valueOf() + elemet.Promedio.valueOf();                      
                       
@@ -272,51 +288,81 @@ export class DashboardGeneralPage {
   }
 
   async guardarInformacion(){
-
-    await this.archivo.escribirArchivo(keyStorage.keySucursal,this.Sucursal);  //Se usa en facturas
-    await this.archivo.escribirArchivo(keyStorage.keyListaStockMin,this.ltstokMin);  //Se usa en stock
-    await this.archivo.escribirArchivo(keyStorage.keyListaStockResumenMin,this.ltstockMinRes);  //Se usa en stock
-    await this.archivo.escribirArchivo(keyStorage.keyListaStockMax,this.ltstokMax);  //Se usa en stock
-    await this.archivo.escribirArchivo(keyStorage.keyListaStockResumenMax,this.ltstockMaxRes);  //Se usa en stock
-    await this.archivo.escribirArchivo(keyStorage.keyListaResumenDeudaCliente,this.ltDeudaResCobro);
-    await this.archivo.escribirArchivo(keyStorage.keyListaDeudaCliente,this.ltDeudaCobro);
-    await this.archivo.escribirArchivo(keyStorage.keyListaDeudaEmpresa,this.ltDeudaPagar);
-    await this.archivo.escribirArchivo(keyStorage.keyltstokMax,this.ltstokMax);
-    await this.archivo.escribirArchivo(keyStorage.keydataAñosV,this.dataAñosV);
-    await this.archivo.escribirArchivo(keyStorage.keydataAñosC,this.dataAñosC);
-    await this.archivo.escribirArchivo(keyStorage.keyltPV,this.ltPV);
-    await this.archivo.escribirArchivo(keyStorage.keypromedioUsuarioPago,this.promedioUsuarioPago);
-    await this.archivo.escribirArchivo(keyStorage.keylistFC,this.listFV);
-    await this.archivo.escribirArchivo(keyStorage.keylistFV,this.listFC);
-    
-    console.log("Guardado completo")
+    this.show.changeContentLoading("Guardando Informacion");
+    if(this.con.isOnline){
+      await this.archivo.escribirArchivo(keyStorage.keySucursal,this.Sucursal);  //Se usa en facturas
+      await this.archivo.escribirArchivo(keyStorage.keyListaStockMin,this.ltstokMin);  //Se usa en stock
+      await this.archivo.escribirArchivo(keyStorage.keyListaStockResumenMin,this.ltstockMinRes);  //Se usa en stock
+      await this.archivo.escribirArchivo(keyStorage.keyListaStockMax,this.ltstokMax);  //Se usa en stock
+      await this.archivo.escribirArchivo(keyStorage.keyListaStockResumenMax,this.ltstockMaxRes);  //Se usa en stock
+      await this.archivo.escribirArchivo(keyStorage.keyListaResumenDeudaCliente,this.ltDeudaResCobro);
+      await this.archivo.escribirArchivo(keyStorage.keyListaDeudaCliente,this.ltDeudaCobro);
+      await this.archivo.escribirArchivo(keyStorage.keyListaDeudaEmpresa,this.ltDeudaPagar);
+      await this.archivo.escribirArchivo(keyStorage.keydataAñosV,this.dataAñosV);
+      await this.archivo.escribirArchivo(keyStorage.keydataAñosC,this.dataAñosC);
+      await this.archivo.escribirArchivo(keyStorage.keyltPV,this.ltPV);
+      await this.archivo.escribirArchivo(keyStorage.keypromedioUsuarioPago,this.promedioUsuarioPago);
+      await this.archivo.escribirArchivo(keyStorage.keylistFC,this.listFV);
+      await this.archivo.escribirArchivo(keyStorage.keylistFV,this.listFC);
+      await this.archivo.escribirArchivo(keyStorage.keyltValCaja,this.ltValCaja);
+    }
+  
+    await this.show.continuarTiempo();
   }
 
-  async getStockBajo(){    
+  async getStock(){   
+    this.show.changeContentLoading("Cargando Productos Escasos") 
     await this.con.getResStockBajo(this.Sucursal.ID,'B').then(async (resA)=>{
       if(resA){
         this.ltstockMinRes = await JSON.parse(this.con.data);
+        
         await this.con.getStockBajo(this.Sucursal.ID,'B').then(async (resB)=>{
           if(resB){
             this.ltstokMin = await JSON.parse(this.con.data)
-            this.selectOp(2);
+            console.log("stock M", this.ltstokMin)
+            console.log("stock MA", this.ltstockMinRes)
+            if(this.ltstokMin!== undefined && this.ltstockMinRes!==undefined){
+              console.log("entro")
+              this.selectOp(2);
+            }            
+          }else{
+          }
+        })
+      }else{
+      } 
+    }) 
+    this.show.changeContentLoading("Cargando Productos Excedentes") 
+    await this.con.getResStockBajo(this.Sucursal.ID,'A').then(async (resA)=>{
+      if(resA){
+        this.ltstockMaxRes = await JSON.parse(this.con.data);
+        await this.con.getStockBajo(this.Sucursal.ID,'A').then(async (resB)=>{
+          if(resB){
+            this.ltstokMax = await JSON.parse(this.con.data)
+            if(this.ltstokMax!==undefined && this.ltstockMaxRes!==undefined){
+              console.log("entro")
+              this.selectOp(1);
+            }
+            
           }
         })
       } 
-    })    
+    })     
   }
 
   async getPuntoVenta(IDSU){
+    this.show.changeContentLoading("Contando Dinero en Cajas");
     await this.con.getPuntosVenta(IDSU).then(async (resA)=>{
       if(resA){
         this.ltPV = await JSON.parse(this.con.data);
         if(this.ltPV.length>0){
-          let tempFecha = new Date();
+          let tempFecha = new Date(this.FechaIni);
           await this.con.getValPunVenta(IDSU,tempFecha).then(async res=>{
             if(res){
               this.ltValCaja = await JSON.parse(this.con.data); 
-              if(this.ltValCaja.length>0){
-                await this.selectPV(this.ltValCaja[0]);              
+              if(this.ltValCaja!==null){
+                if(this.ltValCaja.length>0){
+                  await this.selectPV(this.ltValCaja[0]);              
+                }
               }
             }
           });
@@ -331,32 +377,20 @@ export class DashboardGeneralPage {
       this.totalVentasPunVenta=0;
       this.selectPunVen = item;
       let tempData=[];
-      this.ltValCaja.forEach(element => {
-        if(element.Nombre === item.Nombre){
-          this.totalVentasPunVenta = this.totalVentasPunVenta.valueOf()+element.Total.valueOf();
-          tempData.push(element.Total);
-        }       
-        this.totalVentasUsuarios = this.totalVentasUsuarios.valueOf()+element.Total.valueOf();
-      });
-      tempData.push(0);
-      this.CanvasCaja.data.datasets[0].data=tempData;     
-      this.CanvasCaja.data.datasets[0].label=item.Nombre;  
-      this.CanvasCaja.update()
+      if(this.ltValCaja!==null && this.ltValCaja!== undefined){
+        this.ltValCaja.forEach(element => {
+          if(element.Nombre === item.Nombre){
+            this.totalVentasPunVenta = this.totalVentasPunVenta.valueOf()+element.Total.valueOf();
+            tempData.push(element.Total);
+          }       
+          this.totalVentasUsuarios = this.totalVentasUsuarios.valueOf()+element.Total.valueOf();
+        });
+        tempData.push(0);
+        this.CanvasCaja.data.datasets[0].data=tempData;     
+        this.CanvasCaja.data.datasets[0].label=item.Nombre;  
+        this.CanvasCaja.update()
+      }
     }
-  }
-
-  async getStockAlto(){
-    await this.con.getResStockBajo(this.Sucursal.ID,'A').then(async (resA)=>{
-      if(resA){
-        this.ltstockMaxRes = await JSON.parse(this.con.data);
-        await this.con.getStockBajo(this.Sucursal.ID,'A').then(async (resB)=>{
-          if(resB){
-            this.ltstokMax = await JSON.parse(this.con.data)
-            this.selectOp(1);
-          }
-        })
-      } 
-    })    
   }
 
   async llenarDatosGraficoStock(){
@@ -373,11 +407,18 @@ export class DashboardGeneralPage {
   
       //this.pieChartLabels = await temp2;
       this.StockpieChartData = await temp1;
-    }    
+    }  
+    console.log("d",this.StockpieChartData);
+    console.log("l",this.StockpieChartLabels);
+    console.log("c",this.StockchartColor);
+    console.log("ty",this.StockpieChartType);
+    console.log("o",this.StockbaseOptions);
+    console.log("le",this.StockchartLegend);
   }
 
   async contarDatosStock(){    
     this.totalStock=0;
+    console.log(this.appType)
     if(this.ltStokResumen!=undefined){
       if(this.ltStokResumen.length>0){
         await this.ltStokResumen.forEach(grupo => {
@@ -389,7 +430,8 @@ export class DashboardGeneralPage {
             }
         });
       }
-    }    
+    } 
+    console.log(this.GrupoMayorStockBajo)   
   }
 
   goDetalleStock(){    
@@ -398,17 +440,23 @@ export class DashboardGeneralPage {
   }
 
   async getFacCVAños(){
-    await this.con.getFactAnuales("V",1,true).then(async (resV)=>{
+    this.show.changeContentLoading("Cargando Facturas de Ventas")
+    let añoActual = parseInt(this.FechaIni.split("-")[0])
+    await this.con.getFactAnuales("V",1,añoActual).then(async (resV)=>{
       if(resV){
-        this.dataAñosV = await JSON.parse(this.con.data) 
-        await this.con.getFactAnuales("C",1,true).then(async (resC)=>{
+        this.dataAñosV = await JSON.parse(this.con.data)        
+        console.log("VAn",this.dataAñosV)
+        this.show.changeContentLoading("Cargando Facturas de Compras")
+        await this.con.getFactAnuales("C",1,añoActual).then(async (resC)=>{
           if(resC){
             this.dataAñosC = await JSON.parse(this.con.data) 
+            console.log("CAn",this.dataAñosC)
             let facVenta=[];
             let facCompra=[];
             let dataLabel=[]
-            let totalV=0,totalC=0;
-
+            let totalV:number=0,totalC:number=0;
+            this.totalFC=0;
+            this.totalFV=0;
             for (let index = 0; index < this.dataAñosV.length; index++) {
               const elementV =  this.dataAñosV[index];
               const elementC =  this.dataAñosC[index];
@@ -419,7 +467,8 @@ export class DashboardGeneralPage {
               facCompra.push(elementC.Total);
             }           
             let dataDatos=[];
-
+            console.log("TV",totalV)
+            console.log("TC",totalC)
             dataDatos.push({data:facVenta,label:"Ventas"});
             dataDatos.push({data:facCompra,label:"Compras"});
             this.barChartData = await dataDatos;
@@ -434,11 +483,13 @@ export class DashboardGeneralPage {
   }
 
   async limpiarDatos(){    
+    this.show.changeContentLoading("Limpiando Datos Antiguos");
     this.totalUsuarios=0;
     this.totalProDiaDeuda=0
     this.totalVentasUsuarios=0;
     this.totalStock=0;
     this.totalVentasPunVenta=0;
+    this.ltStokResumen=[]
     this.GrupoMayorStockBajo = {Cantidad:0,Grupo:"Desconocido"};   
 
     //#region Caja Grafico
@@ -515,19 +566,11 @@ export class DashboardGeneralPage {
       this.CanvasDeuda.data.datasets[0].label="Sin Datos";
     }
     this.CanvasDeuda.update()
-    //#endregion
-    //await this.archivo.escribirArchivo(keyStorage.keySucursal,undefined);  //Se usa en facturas
-    //await this.archivo.escribirArchivo(keyStorage.keyListaStockMin,undefined);  //Se usa en stock
-    //await this.archivo.escribirArchivo(keyStorage.keyListaStockResumenMin,undefined);  //Se usa en stock
-    //await this.archivo.escribirArchivo(keyStorage.keyListaStockMax,undefined);  //Se usa en stock
-    //await this.archivo.escribirArchivo(keyStorage.keyListaStockResumenMax,undefined);  //Se usa en stock
-
-
+    
   }
   
   async getUsuarioCaja(IDSU,IDPT){
     let sdw = new Date()
-    //console.log(sdw)
     await this.con.getUsuarioPorCaja(IDSU,IDPT,sdw).then(async res=>{      
       if(res){
         let UserCaja = await JSON.parse(this.con.data);

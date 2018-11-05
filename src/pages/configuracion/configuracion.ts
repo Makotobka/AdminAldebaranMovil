@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
 import { ConexionHttpProvider } from '../../providers/conexion-http/conexion-http';
 
@@ -20,22 +20,32 @@ export class ConfiguracionPage {
   public FechaIni;
   public FechaFin;
   public Sucursal;  
+  private antFechaIni;
   public ltSucursal:any[]=[];
-
+  @ViewChild('tgCon') toogleConexion;
+  @ViewChild('tgSuc') selecOptionSucursal;
+  
   constructor(public con:ConexionHttpProvider,public view:ViewController ,public navCtrl: NavController, public navParams: NavParams) {    
     this.FechaFin = this.navParams.get("FechaFin");
     this.FechaIni = this.navParams.get("FechaIni");
     this.Sucursal = this.navParams.get("Sucursal");
+    this.antFechaIni = this.navParams.get("FechaIni");
     if(this.Sucursal=== undefined){
       this.Sucursal={"ID":1,"AGENCIA":"No Seleccionado"};
     }
+    console.log(this.Sucursal)
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad ConfiguracionPage');
-    this.isDisabled = this.con.isOnline;
-    console.log("E A ",this.con.isOnline)
+    const name = this.Sucursal.AGENCIA
     this.cargarSucursales();
+    this.toogleConexion.checked = this.con.isOnline;
+    console.log(this.selecOptionSucursal)
+    console.log(name)
+    this.selecOptionSucursal.text=name
+    this.selecOptionSucursal._text=name
+    this.selecOptionSucursal._texts=[name]
+    this.selecOptionSucursal._value=name
   }
 
   async cargarSucursales(){
@@ -45,10 +55,10 @@ export class ConfiguracionPage {
   }
 
   Guardar(){    
+    console.log(this.selecOptionSucursal)
     let tempIni = this.FechaIni.split("T")[0];
     let tempFin = this.FechaFin.split("T")[0];
     let tempSuc;
-    //console.log(this.Sucursal);
     for (let index = 0; index < this.ltSucursal.length; index++) {
       const element = this.ltSucursal[index];
       if(element.AGENCIA === this.Sucursal){
@@ -60,19 +70,21 @@ export class ConfiguracionPage {
     if(tempSuc===undefined){
       tempSuc={"ID":1,"AGENCIA":"No Seleccionado"};
     }
-    this.con.isOnline = this.isDisabled;
-    console.log("E G ",this.con.isOnline)
+
+    this.con.isOnline = this.toogleConexion.checked;  
+    if(!this.toogleConexion.checked){
+      this.FechaIni = this.antFechaIni
+    }
+    
     this.view.dismiss({"FechaFin":tempFin,"FechaIni":tempIni,"Sucursal":tempSuc})
   }
 
   getEstado(){
     if(this.con.isOnline){
-      console.log("A")
       return "Conectado";
     }else{
-      console.log("A")
       return "Desconectado";
     }
   }
-
 }
+

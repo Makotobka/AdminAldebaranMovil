@@ -5,14 +5,12 @@
             <ion-list-header>
                 Facturas
             </ion-list-header>
-
             <ion-item tappable (click)="goPage('Facturas Actuales')">
                 Facturas Actuales
             </ion-item>
-            <ion-item tappable (click)="goPage('Facturas por Fechas')">
+            <ion-item tappable (click)="goPage('Facturas por Fechas')" *ngIf="con.isOnline">
                 Facturas por Fechas
             </ion-item>
-
             <ion-list-header>
                 Stock
             </ion-list-header>
@@ -28,12 +26,13 @@
                 Deudas
             </ion-list-header>
 
-            <ion-item tappable (click)="goPage('Clientes Adeudores')">
-                Clientes Adeudores
+            <ion-item tappable (click)="goPage('Deudas de Clientes')">
+                Deudas de Clientes
             </ion-item>
-            <ion-item tappable (click)="goPage('Stock Maximo')">
-                Stock Maximo
+            <ion-item tappable (click)="goPage('Deudas a Proveedores')">
+                Deudas a Proveedores
             </ion-item>
+
 
         </ion-list>
     </ion-content>
