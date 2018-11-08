@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Http, RequestOptions, ResponseContentType, Headers, RequestMethod } from '@angular/http';
 import { urlAPI } from './app.URLAPI';
+import { ArchivoInternosProvider } from '../archivo-internos/archivo-internos';
+import { keyStorage } from '../archivo-internos/staticConfigStorage';
 
 /*
   Generated class for the ConexionHttpProvider provider.
@@ -21,7 +23,7 @@ export class ConexionHttpProvider {
   public data:any;
   public isOnline;
 
-  constructor(public http: Http) {    
+  constructor(public http: Http, public archivo:ArchivoInternosProvider) {    
     this.isOnline=true;
   }
 
@@ -88,7 +90,14 @@ export class ConexionHttpProvider {
         let respuesta = await this.http.get(url+parametros).toPromise();    
         await this.llenarDatosRespons(respuesta);
         return true;
-      }else{
+      }else{                
+        let temp;
+        if(Accion ==='C'){
+          temp = await this.archivo.leerArchivo(keyStorage.keylistFC)
+        }else{
+          temp = await this.archivo.leerArchivo(keyStorage.keylistFV)
+        }        
+        this.data = await JSON.stringify(temp);
         return true;
       }
     }catch (e){
@@ -106,6 +115,14 @@ export class ConexionHttpProvider {
         await this.llenarDatosRespons(respuesta);
         return true;
       }else{
+        let temp;
+        if(ACC==='B'){
+          temp = await this.archivo.leerArchivo(keyStorage.keyListaStockMin)
+        }else{
+          temp = await this.archivo.leerArchivo(keyStorage.keyListaStockMax)
+        }
+        this.data = await JSON.stringify(temp);
+        
         return true;
       }
     }catch{
@@ -122,6 +139,15 @@ export class ConexionHttpProvider {
         await this.llenarDatosRespons(respuesta);
         return true;
       }else{
+        let temp
+        if(ACC==='B'){
+          temp = await this.archivo.leerArchivo(keyStorage.keyListaStockResumenMin)
+        }else{
+          temp = await this.archivo.leerArchivo(keyStorage.keyListaStockResumenMax)
+        }
+        console.log(temp);
+        this.data = await JSON.stringify(temp);
+        
         return true;
       }
     }catch{
@@ -144,7 +170,7 @@ export class ConexionHttpProvider {
     }
   }
 
-  async getFactAnuales(Accion:string, IDSU:number, AñoActual:boolean){
+  async getFactAnuales(Accion:string, IDSU:number, AñoActual:number){
     const url = this.dirCone+urlAPI.getFacCVAños;
     try{
       if(this.isOnline){     
@@ -153,6 +179,13 @@ export class ConexionHttpProvider {
         await this.llenarDatosRespons(respuesta);
         return true;
       }else{
+        let temp
+        if(Accion==='V'){
+          temp = await this.archivo.leerArchivo(keyStorage.keydataAñosV)
+        }else{
+          temp = await this.archivo.leerArchivo(keyStorage.keydataAñosC)
+        }
+        this.data = await JSON.stringify(temp);
         return true;
       }
     }catch{
@@ -160,16 +193,18 @@ export class ConexionHttpProvider {
     }
   }
 
-  async getUsuarioPorCaja(IDSU:number,IDPT:number){
+  async getUsuarioPorCaja(IDSU:number,IDPT:number,Fecha:Date){
     const url = this.dirCone+urlAPI.getUsuarioPorCaja;
     try{
       if(this.isOnline){     
-        let parametros:string=IDSU.toString()+"/"+IDPT.toString();      
-        let respuesta = await this.http.get(url+parametros).toPromise();        
+        //console.log("Fehc aneviada ",Fecha.toISOString().split('T')[0]);
+        let parametros:string=IDSU.toString()+"/"+IDPT.toString()+"/"+Fecha.toISOString().split('T')[0];      
+        let respuesta = await this.http.get(url+parametros).toPromise();            
         await this.llenarDatosRespons(respuesta);
+        //console.log(JSON.parse(this.data));
         return true;
       }else{
-        return true;
+        return false;
       }
     }catch{
       return false
@@ -184,7 +219,9 @@ export class ConexionHttpProvider {
         let respuesta = await this.http.get(url+parametros).toPromise();        
         await this.llenarDatosRespons(respuesta);
         return true;
-      }else{
+      }else{        
+        let temp = await this.archivo.leerArchivo(keyStorage.keyltPV)        
+        this.data = await JSON.stringify(temp);
         return true;
       }
     }catch{
@@ -192,15 +229,68 @@ export class ConexionHttpProvider {
     }
   }
 
-  async getValPunVenta(IDSU:number){
+  async getValPunVenta(IDSU:number,Fecha:Date){
     const url = await this.dirCone+urlAPI.getValPunVen;
     try{
       if(this.isOnline){     
-        let parametros:string=IDSU.toString();
+        let parametros:string=IDSU.toString()+"/"+Fecha.toISOString().split('T')[0];
+        console.log(parametros)
         let respuesta = await this.http.get(url+parametros).toPromise();        
         await this.llenarDatosRespons(respuesta);
         return true;
       }else{
+        let temp = await this.archivo.leerArchivo(keyStorage.keyltValCaja);
+        this.data = JSON.stringify(temp);
+        return true;
+      }
+    }catch{
+      return false
+    }
+  }
+
+  //getDeudas:"DC/getDeuda/",//-
+  //getProDiaDeuda:"getProDiaDeuda"//-
+
+  async getDeudas(IDSU:number,Accion:string){
+    const url = await this.dirCone+urlAPI.getDeudas;
+    try{
+      if(this.isOnline){     
+        let parametros:string=IDSU.toString()+"/"+Accion;
+        //console.log(parametros)
+        let respuesta = await this.http.get(url+parametros).toPromise();        
+        await this.llenarDatosRespons(respuesta);
+        return true;
+      }else{
+        let temp;
+        switch(Accion){          
+          case "RESCOBRAR":
+            temp = await this.archivo.leerArchivo(keyStorage.keyListaResumenDeudaCliente);
+          break;
+          case "COBRAR":
+            temp = await this.archivo.leerArchivo(keyStorage.keyListaDeudaCliente);
+          break;
+          case "PAGAR":
+            temp = await this.archivo.leerArchivo(keyStorage.keyListaDeudaEmpresa);
+          break;
+        }
+        this.data = JSON.stringify(temp);
+        return true;
+      }
+    }catch{
+      return false
+    }
+  }
+
+  async getPromDeudaDia(){
+    const url = await this.dirCone+urlAPI.getProDiaDeuda;
+    try{
+      if(this.isOnline){     
+        let respuesta = await this.http.get(url).toPromise();        
+        await this.llenarDatosRespons(respuesta);
+        return true;
+      }else{
+        let temp = await this.archivo.leerArchivo(keyStorage.keypromedioUsuarioPago);        
+        this.data = await JSON.stringify(temp)
         return true;
       }
     }catch{

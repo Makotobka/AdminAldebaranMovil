@@ -7,5 +7,7 @@ export const urlAPI = {
     getFacCVAños:"F/getMesCV/",
     getUsuarioPorCaja:"Cj/getUsuCaj/",
     getPunVenta:"Cj/getPunVen/",
-    getValPunVen:"Cj/getValPunVen/"
+    getValPunVen:"Cj/getValPunVen/",
+    getDeudas:"DC/getDeuda/",//-
+    getProDiaDeuda:"DC/getProDiaDeuda"//-
 };

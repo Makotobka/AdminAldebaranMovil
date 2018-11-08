@@ -147,24 +147,46 @@
     </ion-card>
 
     <ion-card>
-        <ion-card-header class="titulosCentados TextoJustificado">Activos</ion-card-header>
+        <ion-card-header class="titulosCentados TextoJustificado">Cuentas x Cobrar VS Cuentas x Pagar</ion-card-header>
         <ion-card-content>
             <ion-item>
-                <ion-label>
-                    Factura Venta
+                <ion-label class="TextoJustificado TextoDescripcion">
+                    Promedio de Pago a Credito
                 </ion-label>
-                <ion-label>
-                    $ 5436.67
+                <ion-label class="TextoJustificado TextoNumeros">
+                    {{totalProDiaDeuda | redondear}} Dias
                 </ion-label>
             </ion-item>
             <ion-item>
-                <ion-label>
-                    Factura Compra
+                <ion-label class="TextoJustificado TextoDescripcion">
+                    Minino {{minimoProPago}} Dias
                 </ion-label>
-                <ion-label>
-                    $ 072.32
+                <ion-label class="TextoJustificado TextoDescripcion">
+                    Maximo {{maximoProPago}} Dias
                 </ion-label>
+            </ion-item>
+
+            <ion-item>
+                <canvas #barHoriDeuda></canvas>
             </ion-item>
         </ion-card-content>
     </ion-card>
 </ion-content>
+
+<ion-footer>
+    <ion-toolbar color="light">
+        <ion-label>
+            Ultima Actualizacion: {{FechaIni | date}}
+        </ion-label>
+        <ion-buttons end>
+            <button ion-button icon-only>
+                <ion-label *ngIf="con.isOnline" style="color: green">
+                    Online
+                </ion-label>
+                <ion-label *ngIf="!con.isOnline" style="color: red">
+                    Offline
+                </ion-label>
+            </button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-footer>

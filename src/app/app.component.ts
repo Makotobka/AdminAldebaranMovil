@@ -9,6 +9,10 @@ import { DashboardEspecificoPage } from '../pages/dashboard-especifico/dashboard
 import { LoginPage } from '../pages/login/login';
 import { FacturasPage } from '../pages/facturas/facturas';
 import { StockPage } from '../pages/stock/stock';
+import { ListaDeudaPage } from '../pages/lista-deuda/lista-deuda';
+import { ArchivoInternosProvider } from '../providers/archivo-internos/archivo-internos';
+import { ConexionHttpProvider } from '../providers/conexion-http/conexion-http';
+
 @Component({
   templateUrl: 'app.html'
 })
@@ -16,10 +20,11 @@ export class MyApp {
 
   rootPage:any = LoginPage;
 
-  constructor(public modal:ModalController,platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen) {
+  constructor(private con:ConexionHttpProvider,private archivo:ArchivoInternosProvider, public modal:ModalController,platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen) {
     platform.ready().then(() => {
       statusBar.styleDefault();
       splashScreen.hide();
+      this.InformacionArranque();
     });
   }
 
@@ -38,8 +43,25 @@ export class MyApp {
       case "Stock Maximo":
         modalPage = this.modal.create(StockPage,{min:false,titulo:"Stock Maximo"});      
       break;
+      case "Deudas de Clientes":
+        modalPage = this.modal.create(ListaDeudaPage,{isCliente:true});
+      break;
+      case "Deudas a Proveedores":
+        modalPage = this.modal.create(ListaDeudaPage,{isCliente:false});
+      break;
+
     }
     modalPage.present();
+  }
+
+  async InformacionArranque(){
+    let resOnline = await this.archivo.leerArchivo("keyIsOnline");
+    if(resOnline === null || resOnline === undefined){
+      this.con.isOnline = true;
+    }else{
+      this.con.isOnline = resOnline;
+    }
+    console.log(resOnline);
   }
 }
 

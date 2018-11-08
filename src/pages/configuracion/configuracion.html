@@ -17,26 +17,25 @@
     <ion-list>
         <ion-item>
             <ion-label>Sucursal</ion-label>
-            <ion-select [(ngModel)]="Sucursal">
+            <ion-select #tgSuc [(ngModel)]="Sucursal">
                 <ion-option *ngFor="let item of ltSucursal" value="{{item.AGENCIA}}">{{item.AGENCIA}}</ion-option>
             </ion-select>
         </ion-item>
 
-
         <ion-item>
-            <ion-label>Inicio</ion-label>
+            <ion-label>Fecha de Datos</ion-label>
             <ion-datetime displayFormat="MMM DD YYYY" [(ngModel)]="FechaIni"></ion-datetime>
         </ion-item>
-        <ion-item>
-            <ion-label>Fin</ion-label>
-            <ion-datetime displayFormat="MMM DD YYYY" [(ngModel)]="FechaFin"></ion-datetime>
-        </ion-item>
 
+        <ion-item>
+            <ion-label>Conectado</ion-label>
+            <ion-toggle #tgCon></ion-toggle>
+        </ion-item>
 
         <ion-item>
             <button ion-item (click)="Guardar()">
-          Guardar Informacion
-        </button>
+                Guardar Informacion
+            </button>
         </ion-item>
     </ion-list>
 </ion-content>

@@ -8,6 +8,8 @@ import { DetalleCajaPage } from "../pages/detalle-caja/detalle-caja";
 import { FacturasPage } from "../pages/facturas/facturas";
 import { ConfiguracionPage } from "../pages/configuracion/configuracion";
 import { StockPage } from "../pages/stock/stock";
+import { ListaDeudaPage } from "../pages/lista-deuda/lista-deuda";
+import { DetalleDeudaClientePage } from "../pages/detalle-deuda-cliente/detalle-deuda-cliente";
 
 export const paginas = [
     MyApp,
@@ -19,5 +21,7 @@ export const paginas = [
     DetalleCajaPage,
     FacturasPage,
     ConfiguracionPage,
-    StockPage
+    StockPage,
+    ListaDeudaPage,
+    DetalleDeudaClientePage
 ];
