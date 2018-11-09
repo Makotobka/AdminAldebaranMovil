@@ -1,3 +1,5 @@
+import { keyStorage } from './../../providers/archivo-internos/staticConfigStorage';
+import { ArchivoInternosProvider } from './../../providers/archivo-internos/archivo-internos';
 import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
 import { ConexionHttpProvider } from '../../providers/conexion-http/conexion-http';
@@ -23,9 +25,8 @@ export class ConfiguracionPage {
   private antFechaIni;
   public ltSucursal:any[]=[];
   @ViewChild('tgCon') toogleConexion;
-  @ViewChild('tgSuc') selecOptionSucursal;
   
-  constructor(public con:ConexionHttpProvider,public view:ViewController ,public navCtrl: NavController, public navParams: NavParams) {    
+  constructor(private archivo:ArchivoInternosProvider,public con:ConexionHttpProvider,public view:ViewController ,public navCtrl: NavController, public navParams: NavParams) {    
     this.FechaFin = this.navParams.get("FechaFin");
     this.FechaIni = this.navParams.get("FechaIni");
     this.Sucursal = this.navParams.get("Sucursal");
@@ -40,12 +41,6 @@ export class ConfiguracionPage {
     const name = this.Sucursal.AGENCIA
     this.cargarSucursales();
     this.toogleConexion.checked = this.con.isOnline;
-    console.log(this.selecOptionSucursal)
-    console.log(name)
-    this.selecOptionSucursal.text=name
-    this.selecOptionSucursal._text=name
-    this.selecOptionSucursal._texts=[name]
-    this.selecOptionSucursal._value=name
   }
 
   async cargarSucursales(){
@@ -55,7 +50,7 @@ export class ConfiguracionPage {
   }
 
   Guardar(){    
-    console.log(this.selecOptionSucursal)
+    this.archivo.escribirArchivo(keyStorage.keyFechaSistema,this.FechaIni);
     let tempIni = this.FechaIni.split("T")[0];
     let tempFin = this.FechaFin.split("T")[0];
     let tempSuc;

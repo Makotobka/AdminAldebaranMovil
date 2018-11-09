@@ -14,7 +14,8 @@ export const keyStorage = {
     keylistFC:"keylistFC",
     keypromedioUsuarioPago:"keypromedioUsuarioPago",
     keyltValCaja:"keyltValCaja",    
-    keyIsOnline:"keyIsOnline"
+    keyIsOnline:"keyIsOnline",
+    keyFechaSistema:"keyFechaSistema"
 };
 
 export const staticConfigStorage = {

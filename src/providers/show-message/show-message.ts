@@ -1,23 +1,12 @@
 import { Injectable } from '@angular/core';
-<<<<<<< HEAD
-import { AlertController, LoadingController, ToastController, ActionSheetController } from 'ionic-angular';
-import { LocalNotifications } from '@ionic-native/local-notifications';
-=======
 import { AlertController, LoadingController, Loading, ActionSheetController, ToastController } from 'ionic-angular';
 import { LocalNotifications } from '@ionic-native/local-notifications';
 import { Storage } from '@ionic/storage';
 
->>>>>>> Oficina
 
 @Injectable()
 export class ShowMessageProvider {
 
-<<<<<<< HEAD
-  constructor( private localNotifications: LocalNotifications,private alertCtrl: AlertController, private loadingCtrl: LoadingController,    private actionSheetCtrl: ActionSheetController,    private toastCtrl: ToastController,) {
-
-  }
-
-=======
 
   public loading:Loading=undefined;  
   private tiempoLoading = undefined;   // En segundos
@@ -150,5 +139,4 @@ export class ShowMessageProvider {
   getTiempoLoading(){
     return this.tiempoLoading;
   }
->>>>>>> Oficina
 }

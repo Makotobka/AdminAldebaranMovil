@@ -136,6 +136,7 @@ export class DashboardGeneralPage {
 
   async selectOp(val:number){    
     if(val === 1){
+      //console.log("ABC")
       if(this.ltstockMinRes.length>0){
         this.ltStokResumen = this.ltstockMinRes;
       }
@@ -143,6 +144,7 @@ export class DashboardGeneralPage {
         this.ltStok = this.ltstokMin;
       }     
     }else{
+      //console.log("CBA")
       if(this.ltstockMaxRes.length>0){
         this.ltStokResumen = this.ltstockMaxRes;
       }
@@ -288,7 +290,7 @@ export class DashboardGeneralPage {
   }
 
   async guardarInformacion(){
-    this.show.changeContentLoading("Guardando Informacion");
+    this.show.changeContentLoading("Guardando Informacion");  
     if(this.con.isOnline){
       await this.archivo.escribirArchivo(keyStorage.keySucursal,this.Sucursal);  //Se usa en facturas
       await this.archivo.escribirArchivo(keyStorage.keyListaStockMin,this.ltstokMin);  //Se usa en stock
@@ -306,7 +308,7 @@ export class DashboardGeneralPage {
       await this.archivo.escribirArchivo(keyStorage.keylistFV,this.listFC);
       await this.archivo.escribirArchivo(keyStorage.keyltValCaja,this.ltValCaja);
     }
-  
+    await this.archivo.escribirArchivo(keyStorage.keyFechaSistema,this.FechaIni);
     await this.show.continuarTiempo();
   }
 
@@ -315,15 +317,11 @@ export class DashboardGeneralPage {
     await this.con.getResStockBajo(this.Sucursal.ID,'B').then(async (resA)=>{
       if(resA){
         this.ltstockMinRes = await JSON.parse(this.con.data);
-        
         await this.con.getStockBajo(this.Sucursal.ID,'B').then(async (resB)=>{
           if(resB){
             this.ltstokMin = await JSON.parse(this.con.data)
-            console.log("stock M", this.ltstokMin)
-            console.log("stock MA", this.ltstockMinRes)
             if(this.ltstokMin!== undefined && this.ltstockMinRes!==undefined){
-              console.log("entro")
-              this.selectOp(2);
+              this.selectOp(1);
             }            
           }else{
           }
@@ -337,12 +335,7 @@ export class DashboardGeneralPage {
         this.ltstockMaxRes = await JSON.parse(this.con.data);
         await this.con.getStockBajo(this.Sucursal.ID,'A').then(async (resB)=>{
           if(resB){
-            this.ltstokMax = await JSON.parse(this.con.data)
-            if(this.ltstokMax!==undefined && this.ltstockMaxRes!==undefined){
-              console.log("entro")
-              this.selectOp(1);
-            }
-            
+            this.ltstokMax = await JSON.parse(this.con.data)            
           }
         })
       } 
@@ -395,68 +388,42 @@ export class DashboardGeneralPage {
 
   async llenarDatosGraficoStock(){
     let temp1=[];    
-<<<<<<< HEAD
-    if(this.ltStokResumen!==undefined){
-=======
     if(this.ltStokResumen!=undefined){
->>>>>>> Oficina
-      for (let index = 0; index < this.ltStokResumen.length; index++) {
-        const element = await this.ltStokResumen[index];
-        await temp1.push(element.Cantidad);
-        await this.StockpieChartLabels.push(element.Grupo);
-        if((index.valueOf()+1) === this.cantMinMostrar.valueOf()){
-          break;
+      if(this.ltStokResumen.length>0){
+        for (let index = 0; index < this.ltStokResumen.length; index++) {
+          const element = await this.ltStokResumen[index];
+          await temp1.push(element.Cantidad);
+          await this.StockpieChartLabels.push(element.Grupo);
+          if((index.valueOf()+1) === this.cantMinMostrar.valueOf()){
+            break;
+          }
         }
-<<<<<<< HEAD
-      }  
-      //this.pieChartLabels = await temp2;
-      this.StockpieChartData = await temp1;
-    }
-=======
-      }
-  
-      //this.pieChartLabels = await temp2;
-      this.StockpieChartData = await temp1;
+      }      
     }  
-    console.log("d",this.StockpieChartData);
-    console.log("l",this.StockpieChartLabels);
-    console.log("c",this.StockchartColor);
-    console.log("ty",this.StockpieChartType);
-    console.log("o",this.StockbaseOptions);
-    console.log("le",this.StockchartLegend);
->>>>>>> Oficina
+    this.StockpieChartData = await temp1;
+    //console.log("d",this.StockpieChartData);
+    //console.log("l",this.StockpieChartLabels);
+    //console.log("c",this.StockchartColor);
+    //console.log("ty",this.StockpieChartType);
+    //console.log("o",this.StockbaseOptions);
+    //console.log("le",this.StockchartLegend);
   }
 
   async contarDatosStock(){    
     this.totalStock=0;
-<<<<<<< HEAD
-    console.log(this.ltStokResumen);    
-    if(this.ltStokResumen!== undefined) {
-      if(this.ltStokResumen.length>0){
-        this.ltStokResumen.forEach(grupo => {
-          this.totalStock = this.totalStock.valueOf() + grupo.Cantidad.valueOf();
-        });    
-        this.ltStokResumen.forEach(grupo => {
-=======
-    console.log(this.appType)
     if(this.ltStokResumen!=undefined){
       if(this.ltStokResumen.length>0){
         await this.ltStokResumen.forEach(grupo => {
           this.totalStock = this.totalStock.valueOf() + grupo.Cantidad.valueOf();
         });    
         await this.ltStokResumen.forEach(grupo => {
->>>>>>> Oficina
             if(this.GrupoMayorStockBajo.Cantidad<grupo.Cantidad){
               this.GrupoMayorStockBajo=grupo;
             }
         });
       }
-<<<<<<< HEAD
-    }
-=======
     } 
-    console.log(this.GrupoMayorStockBajo)   
->>>>>>> Oficina
+    //console.log(this.GrupoMayorStockBajo)   
   }
 
   goDetalleStock(){    
@@ -470,12 +437,10 @@ export class DashboardGeneralPage {
     await this.con.getFactAnuales("V",1,añoActual).then(async (resV)=>{
       if(resV){
         this.dataAñosV = await JSON.parse(this.con.data)        
-        console.log("VAn",this.dataAñosV)
         this.show.changeContentLoading("Cargando Facturas de Compras")
         await this.con.getFactAnuales("C",1,añoActual).then(async (resC)=>{
           if(resC){
             this.dataAñosC = await JSON.parse(this.con.data) 
-            console.log("CAn",this.dataAñosC)
             let facVenta=[];
             let facCompra=[];
             let dataLabel=[]
@@ -492,8 +457,6 @@ export class DashboardGeneralPage {
               facCompra.push(elementC.Total);
             }           
             let dataDatos=[];
-            console.log("TV",totalV)
-            console.log("TC",totalC)
             dataDatos.push({data:facVenta,label:"Ventas"});
             dataDatos.push({data:facCompra,label:"Compras"});
             this.barChartData = await dataDatos;

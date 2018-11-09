@@ -61,7 +61,6 @@ export class MyApp {
     }else{
       this.con.isOnline = resOnline;
     }
-    console.log(resOnline);
   }
 }
 

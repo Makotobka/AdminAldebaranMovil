@@ -145,7 +145,7 @@ export class ConexionHttpProvider {
         }else{
           temp = await this.archivo.leerArchivo(keyStorage.keyListaStockResumenMax)
         }
-        console.log(temp);
+        console.log("data Res",temp);
         this.data = await JSON.stringify(temp);
         
         return true;

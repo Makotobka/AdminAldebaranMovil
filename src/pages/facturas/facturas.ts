@@ -1,9 +1,9 @@
+import { keyStorage } from './../../providers/archivo-internos/staticConfigStorage';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, DateTime } from 'ionic-angular';
 import { ConexionHttpProvider } from '../../providers/conexion-http/conexion-http';
 import { IntFactura } from '../../estructuras/Factura';
 import { ArchivoInternosProvider } from '../../providers/archivo-internos/archivo-internos';
-import { keyStorage } from '../../providers/archivo-internos/staticConfigStorage';
 import { ShowMessageProvider } from '../../providers/show-message/show-message';
 
 /**
@@ -24,9 +24,7 @@ export class FacturasPage {
   public listFV;
   public totalFC;
   public totalFV;
-  public FechaIni = new Date().toISOString();
-  public FechaFin = new Date().toISOString();
-  public estado:boolean
+  public estado:boolean;
   public titulo:string;
 
 
@@ -36,9 +34,10 @@ export class FacturasPage {
   }
 
   async ionViewDidLoad() {
-    this.Sucursal = await this.archivo.leerArchivo(keyStorage.keySucursal);
+    this.Sucursal = await this.archivo.leerArchivo(keyStorage.keySucursal);    
     if(this.estado){    
-      await this.getResumenFacV();
+      let fecha = await this.archivo.leerArchivo(keyStorage.keyFechaSistema);
+      await this.getResumenFacV(fecha);       
     }else{
       console.log("F")
     }
@@ -48,11 +47,11 @@ export class FacturasPage {
     //console.log(evento);
   }
 
-  getResumenFacV(){  
+  getResumenFacV(FechaSystema){  
     this.show.detenerTiempo("Buscando Facturas de Ventas");
     this.Sucursal={"ID":1};
-    let tempFI=this.FechaIni.split('T')[0];
-    let tempFF=this.FechaFin.split('T')[0];
+    let tempFI=FechaSystema.split('T')[0];
+    let tempFF=FechaSystema.split('T')[0];
     this.con.getResFac("V",tempFI,tempFF,this.Sucursal.ID).then(async (resV)=>{
       if(resV){
         this.show.changeContentLoading("Buscando Facturas de Compras");

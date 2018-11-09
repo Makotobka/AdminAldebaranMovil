@@ -13,10 +13,7 @@ import { InAppBrowser } from '@ionic-native/in-app-browser';
 import { ConexionHttpProvider } from "../providers/conexion-http/conexion-http";
 import { ArchivoInternosProvider } from "../providers/archivo-internos/archivo-internos";
 import { ShowMessageProvider } from "../providers/show-message/show-message";
-<<<<<<< HEAD
-=======
 import { LocalNotifications } from "@ionic-native/local-notifications";
->>>>>>> Oficina
 
 export const proveedores = [
     StatusBar,
