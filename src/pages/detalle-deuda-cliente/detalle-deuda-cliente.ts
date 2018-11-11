@@ -19,7 +19,6 @@ export class DetalleDeudaClientePage {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad DetalleDeudaClientePage');
   }
 
 }

@@ -34,7 +34,6 @@ export class ConfiguracionPage {
     if(this.Sucursal=== undefined){
       this.Sucursal={"ID":1,"AGENCIA":"No Seleccionado"};
     }
-    console.log(this.Sucursal)
   }
 
   ionViewDidLoad() {

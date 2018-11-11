@@ -27,7 +27,6 @@ export class CajaPage {
     this.con.getCaja(1,true).then((x)=>{
       if(x){
         let temp:ApeCaja[] = JSON.parse(this.con.data)
-        console.log("=>",temp);
       }
     });
   }

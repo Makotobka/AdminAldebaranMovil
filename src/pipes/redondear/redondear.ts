@@ -16,7 +16,6 @@ export class RedondearPipe implements PipeTransform {
     if(value!=undefined && value!=null){
       let text=value.toString();
       let numAux = Math.round(value * 100) / 100;
-      //console.log(text);
       if(text.split(".").length>=2){
         if(text.split(".")[1].length>=2){        
           return numAux;

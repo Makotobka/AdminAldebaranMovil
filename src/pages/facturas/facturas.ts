@@ -26,11 +26,15 @@ export class FacturasPage {
   public totalFV;
   public estado:boolean;
   public titulo:string;
+  public FechaIni:Date;
+  public FechaFin:Date;
 
 
   constructor(private show:ShowMessageProvider,private archivo:ArchivoInternosProvider ,public con:ConexionHttpProvider ,public navCtrl: NavController, public navParams: NavParams) {    
     this.estado = this.navParams.get("estado");
     this.titulo = this.navParams.get("titulo");
+    this.FechaIni = new Date();
+    this.FechaFin = new Date();
   }
 
   async ionViewDidLoad() {
@@ -38,37 +42,37 @@ export class FacturasPage {
     if(this.estado){    
       let fecha = await this.archivo.leerArchivo(keyStorage.keyFechaSistema);
       await this.getResumenFacV(fecha);       
-    }else{
-      console.log("F")
     }
   }
 
   desplegarFV(evento){
-    //console.log(evento);
   }
 
   getResumenFacV(FechaSystema){  
     this.show.detenerTiempo("Buscando Facturas de Ventas");
-    this.Sucursal={"ID":1};
-    let tempFI=FechaSystema.split('T')[0];
-    let tempFF=FechaSystema.split('T')[0];
+    this.Sucursal={"ID":1};    
+    let tempFI;
+    let tempFF;
+    if(FechaSystema === undefined){
+      tempFI = this.FechaIni;
+      tempFF = this.FechaFin;
+    }else{
+      tempFI=FechaSystema.split('T')[0];
+      tempFF=FechaSystema.split('T')[0];
+    }
     this.con.getResFac("V",tempFI,tempFF,this.Sucursal.ID).then(async (resV)=>{
       if(resV){
         this.show.changeContentLoading("Buscando Facturas de Compras");
         this.listFV = await JSON.parse(this.con.data);     
         this.totalFV = await this.getSumatoria(this.listFV)
-        console.log(this.listFV)
         this.con.getResFac("C",tempFI,tempFF,this.Sucursal.ID).then(async (resC)=>{
           if(resC){
             this.listFC = await JSON.parse(this.con.data);
-            console.log(this.listFC)
             this.totalFC = await this.getSumatoria(this.listFC);  
             this.show.continuarTiempo();          
           }         
         });      
-      }else{
-        console.log("Mensaje: ",this.con.mensaje,"\NCodigo: ",this.con.codigo)
-      }      
+      }
     });    
   }
 

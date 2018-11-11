@@ -39,8 +39,7 @@ export class StockPage {
       this.ltStok = await this.archivo.leerArchivo(keyStorage.keyListaStockMin)
       this.ltStokResumen = await this.archivo.leerArchivo(keyStorage.keyListaStockResumenMin)
     }
-    //console.log(this.ltStok)
-    //console.log(this.ltStokResumen)
+   
     this.cargarDatosGrupo();
   }
 
@@ -60,8 +59,6 @@ export class StockPage {
             isExisxt=true;
           }
         }
-
-        //this.orderLista(item);
         if(isExisxt){
           this.ltStockGrupo.push({"Grupo":item.Grupo,"lista":[item]})  
         }
@@ -69,11 +66,10 @@ export class StockPage {
         this.ltStockGrupo.push({"Grupo":item.Grupo,"lista":[item]})
       }
     }
-    //console.log(this.ltStockGrupo);
+    
   }
 
   getCantidad(item){    
-    //console.log(item);
     let cantidad=0;
     for (let index = 0; index < this.ltStokResumen.length; index++) {
       const element = this.ltStokResumen[index];

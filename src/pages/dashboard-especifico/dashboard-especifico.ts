@@ -29,9 +29,7 @@ export class DashboardEspecificoPage {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad DashboardEspecificoPage');   
     this.chartData=[23,64.2];
-
   }
 
 }

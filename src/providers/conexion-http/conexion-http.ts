@@ -145,7 +145,6 @@ export class ConexionHttpProvider {
         }else{
           temp = await this.archivo.leerArchivo(keyStorage.keyListaStockResumenMax)
         }
-        console.log("data Res",temp);
         this.data = await JSON.stringify(temp);
         
         return true;
@@ -197,11 +196,9 @@ export class ConexionHttpProvider {
     const url = this.dirCone+urlAPI.getUsuarioPorCaja;
     try{
       if(this.isOnline){     
-        //console.log("Fehc aneviada ",Fecha.toISOString().split('T')[0]);
         let parametros:string=IDSU.toString()+"/"+IDPT.toString()+"/"+Fecha.toISOString().split('T')[0];      
         let respuesta = await this.http.get(url+parametros).toPromise();            
         await this.llenarDatosRespons(respuesta);
-        //console.log(JSON.parse(this.data));
         return true;
       }else{
         return false;
@@ -234,7 +231,6 @@ export class ConexionHttpProvider {
     try{
       if(this.isOnline){     
         let parametros:string=IDSU.toString()+"/"+Fecha.toISOString().split('T')[0];
-        console.log(parametros)
         let respuesta = await this.http.get(url+parametros).toPromise();        
         await this.llenarDatosRespons(respuesta);
         return true;
@@ -256,7 +252,6 @@ export class ConexionHttpProvider {
     try{
       if(this.isOnline){     
         let parametros:string=IDSU.toString()+"/"+Accion;
-        //console.log(parametros)
         let respuesta = await this.http.get(url+parametros).toPromise();        
         await this.llenarDatosRespons(respuesta);
         return true;
