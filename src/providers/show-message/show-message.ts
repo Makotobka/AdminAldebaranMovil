@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { AlertController, LoadingController, Loading, ActionSheetController, ToastController } from 'ionic-angular';
-import { LocalNotifications } from '@ionic-native/local-notifications';
 import { Storage } from '@ionic/storage';
 
 
@@ -17,7 +16,7 @@ export class ShowMessageProvider {
 
   private titulo:string;
 
-  constructor(    private alertCtrl: AlertController,    private loadingCtrl: LoadingController,    private actionSheetCtrl: ActionSheetController,    private toastCtrl: ToastController,        private localNotifications: LocalNotifications    ) {
+  constructor(    private alertCtrl: AlertController,    private loadingCtrl: LoadingController,    private actionSheetCtrl: ActionSheetController,    private toastCtrl: ToastController) {
     
   }
 
@@ -76,21 +75,6 @@ export class ShowMessageProvider {
     });
 
     toast.present();
-  }
-
-  showNotificacionLocal(Datos:any){
-    this.localNotifications.schedule({
-      id: 1,
-      text: 'Single ILocalNotification',
-      sound: 'file://assets/sounds/notificacionLocal/SEXY.mp3',
-      //C:\Programacion\Movil\Ionic\AldebaranMesero\0.0.4\src\assets\sounds\notificacionLocal\SEXY.mp3
-      data: { secret: Datos }
-    });
-
-    this.localNotifications.on('click').subscribe((data)=>{
-
-    })
-
   }
 
   async detenerTiempo(textoContenido?:string,controlTiempo?,nameIcono?:string){    

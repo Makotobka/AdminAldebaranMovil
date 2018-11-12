@@ -5,7 +5,6 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { HomePage } from '../pages/home/home';
 import { CajaPage } from '../pages/caja/caja';
-import { DashboardEspecificoPage } from '../pages/dashboard-especifico/dashboard-especifico';
 import { LoginPage } from '../pages/login/login';
 import { FacturasPage } from '../pages/facturas/facturas';
 import { StockPage } from '../pages/stock/stock';

@@ -24,7 +24,6 @@ export class StockPage {
   private estado:boolean;
   public titulo:string;
 
-
   constructor(private archivo:ArchivoInternosProvider,public navCtrl: NavController, public navParams: NavParams) {
     this.estado = navParams.get("min");
     this.titulo = this.navParams.get("titulo");

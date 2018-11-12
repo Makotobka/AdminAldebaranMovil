@@ -7,7 +7,8 @@
 <ion-header>
 
     <ion-navbar>
-        <ion-title>listaDeuda</ion-title>
+        <ion-title *ngIf="isCliente" >Cuentas x Cobrar</ion-title>
+        <ion-title *ngIf="!isCliente" >Cuentas x Pagar</ion-title>
 
     </ion-navbar>
 
@@ -15,7 +16,7 @@
 
 
 <ion-content padding>
-    <ion-searchbar></ion-searchbar>
+    <!--<ion-searchbar></ion-searchbar>-->
     <ion-card class="cardTable" *ngFor="let item of listaData">
         <ion-card-header on-click="item.desplFC=!item.desplFC">
             <ion-item>
@@ -24,7 +25,7 @@
                 </ion-label>
                 <ion-label>
                     <ion-buttons end>
-                        $ {{item.Deuda}}
+                        $ {{item.Deuda | redondear}}
                     </ion-buttons>
                 </ion-label>
             </ion-item>
@@ -50,7 +51,7 @@
                         {{elemet.Fecha | date}}
                     </ion-label>
                     <ion-label class="alineadoIzq">
-                        $ {{elemet.Deuda}}
+                        $ {{elemet.Deuda | redondear}}
                     </ion-label>
                 </ion-item>
             </ion-list>
