@@ -6,9 +6,12 @@
                 Facturas
             </ion-list-header>
             <ion-item tappable (click)="goPage('Facturas Actuales')">
-                Facturas Actuales
+                Facturas Generadas Hoy
             </ion-item>
             <ion-item tappable (click)="goPage('Facturas por Fechas')" *ngIf="con.isOnline">
+                Facturas por Fechas
+            </ion-item>
+            <ion-item tappable (click)="goPage('Facturas comparacion')">
                 Facturas por Fechas
             </ion-item>
             <ion-list-header>

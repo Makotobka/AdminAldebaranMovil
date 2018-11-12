@@ -69,7 +69,9 @@ export class FacturasPage {
           if(resC){
             this.listFC = await JSON.parse(this.con.data);
             this.totalFC = await this.getSumatoria(this.listFC);  
-            this.show.continuarTiempo();          
+            this.show.continuarTiempo();        
+            console.log(this.listFV)  
+            console.log(this.listFC)  
           }         
         });      
       }

@@ -7,8 +7,8 @@
 <ion-header>
 
     <ion-navbar>
-        <ion-title *ngIf="isCliente" >Cuentas x Cobrar</ion-title>
-        <ion-title *ngIf="!isCliente" >Cuentas x Pagar</ion-title>
+        <ion-title *ngIf="isCliente">Cuentas x Cobrar</ion-title>
+        <ion-title *ngIf="!isCliente">Cuentas x Pagar</ion-title>
 
     </ion-navbar>
 
@@ -31,7 +31,7 @@
             </ion-item>
         </ion-card-header>
         <ion-card-content *ngIf="item.desplFC">
-            <ion-list *ngIf="isCliente">
+            <ion-list>
                 <ion-item>
                     <ion-label class="TextoJustificado">
                         N° Factura

@@ -29,7 +29,24 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
   templateUrl: 'dashboard-general.html',
 })
 export class DashboardGeneralPage {
-  private Sucursal={"ID":0,"CIUDAD":"DESCONOCIDA","AGENCIA":"DESCONOCIDA"};
+  private Sucursal={"ID":0,"CIUDAD":"DESCONOCIDA","AGENCIA":"DESCONOCIDA"};  
+
+   private colorBordePaste=[    
+    'rgb(255, 2, 1,0.8)',
+  	'rgb(4, 1, 255,0.8)',
+  	'rgb(124, 1, 255,0.8)',	
+  	'rgb(4, 170, 137,0.8)',
+  	'rgb(255, 83, 128,0.8)',
+    'rgb(255, 110, 1,0.8)',
+    'rgb(255, 133, 81,0.8)',
+    'rgb(255, 204, 85,0.8)',
+    'rgb(253, 254, 1,0.8)',
+    'rgb(163, 254, 18,0.8)',
+    'rgb(4, 209, 96,0.8)',    
+    'rgb(4, 111, 155,0.8)',
+    'rgb(255, 1, 255,0.8)'    
+  ]
+
 
   //#region Facturas
     private dataAñosC;
@@ -40,31 +57,8 @@ export class DashboardGeneralPage {
     public totalFV;
     private FechaIni="";
     private FechaFin="";
-    public FacChartData=[];
-    public FacChartLabels=[];
-    public FacChartType:string = 'horizontalBar';
-    public FacChartLegend:boolean = false;  
-   
-    public FacChartOptions: any = {
-      responsive: true,
-      maintainAspectRatio: true,
-      scaleShowVerticalLines: false,
-      legend: {position: 'bottom'}
-  };
-
-    public barChartOptions:any = {
-      scaleShowVerticalLines: false,
-      responsive: true
-    };
-    public barChartLabels:string[] = [];
-    public barChartType:string = 'bar';
-    public barChartLegend:boolean = true;
     
-    public barChartData:any[] = [
-      {data: [0], label: 'Compras'},
-      {data: [0], label: 'Ventas'}
-    ];
-
+    @ViewChild('CanvasFact') CanvasFactura;
   //{data: [65, 59, 80, 81, 56, 55, 40], label: 'Series A'},
   //#endregion
   //#region Stock
@@ -74,20 +68,11 @@ export class DashboardGeneralPage {
     public ltstokMin:any=[];
     public ltstokMax:any=[];
     public appType = "Minimos";
-    private cantMinMostrar=10;
+    private cantMinMostrar=5;
     public ltStok:Stock[]=[];
     public ltStokResumen:Res_Stock[]=[];
     public totalStock;
     public GrupoMayorStockBajo: Res_Stock = {Cantidad:0,Grupo:"Desconocido"};    
-    public StockchartColor: any[] =  [{backgroundColor:['#d53e4f','#f46d43','#fdae61','#e6f598','#abdda4','#66c2a5','#3288bd','#5e4fa2','#2ecc71','#edd400','#586e75']}]; 
-    public StockpieChartLabels:string[] = [];
-    public StockpieChartData:number[] = [];
-    public StockpieChartType:string = 'pie';
-    public StockbaseOptions: any = {
-      responsive: true,
-      maintainAspectRatio: true,
-    };
-    StockchartLegend:boolean = false;
     
   //#endregion
   //#region Caja
@@ -99,21 +84,7 @@ export class DashboardGeneralPage {
     public selectPunVen={Nombre:''}
     public totalUsuarios=0;
     public totalVentasPunVenta=0;
-    public totalVentasUsuarios=0;
-    public barPVChartType="horizontalBar"
-    //horizontalBar
-    public barPVchartData:any[] = [
-      {data: [0], label: 'Compras'},
-      {data: [0], label: 'Ventas'}
-    ];
-    public barPVchartLabels:string[] = ['2006', '2007', '2008', '2009', '2010', '2011', '2012'];
-    public barPVchartLegend:boolean = true;    
-    public barPVChartOptions: any = {
-        responsive: true,
-        maintainAspectRatio: false,
-        scaleShowVerticalLines: false,
-        legend: {position: 'bottom'}
-    };
+    public totalVentasUsuarios=0;    
   //#endregion
   //#regino Deudas
     @ViewChild('barHoriDeuda') CanvasDeuda;  
@@ -152,6 +123,8 @@ export class DashboardGeneralPage {
       if(this.ltstokMax.length>0){
         this.ltStok = this.ltstokMax;
       }
+
+      
     }
 
     await this.contarDatosStock();
@@ -159,9 +132,7 @@ export class DashboardGeneralPage {
   }
 
   async ionViewDidLoad() {
-    //await this.show.detenerTiempo();
     this.Sucursal = await this.archivo.leerArchivo(keyStorage.keySucursal);    
-    console.log(this.Sucursal);
     if(this.Sucursal === null || this.Sucursal === undefined){
       this.Sucursal = {"ID":0,"CIUDAD":"DESCONOCIDA","AGENCIA":"DESCONOCIDA"};
     }
@@ -185,8 +156,6 @@ export class DashboardGeneralPage {
           if(resC){
             this.listFC = await JSON.parse(this.con.data);
             this.totalFC = await this.getSumatoria(this.listFC);
-            this.FacChartLabels = ["Ventas","Compras"];
-            this.FacChartData = [this.totalFV, this.totalFC];    
           }else{
 
           }
@@ -214,8 +183,7 @@ export class DashboardGeneralPage {
   }
 
   async goSincronizar(isTap:boolean){   
-      await this.show.detenerTiempo();      
-      this.barChartLabels=await [];
+      await this.show.detenerTiempo();  
       await this.limpiarDatos(); 
       await this.getStock(); 
       await this.getFacCVAños();
@@ -318,11 +286,9 @@ export class DashboardGeneralPage {
     await this.con.getResStockBajo(this.Sucursal.ID,'B').then(async (resA)=>{
       if(resA){        
         this.ltstockMinRes = await JSON.parse(this.con.data);
-        //console.log(this.ltstockMinRes)
         await this.con.getStockBajo(this.Sucursal.ID,'B').then(async (resB)=>{
           if(resB){
             this.ltstokMin = await JSON.parse(this.con.data)
-            //console.log(this.ltstokMin)
             if(this.ltstokMin!== undefined && this.ltstockMinRes!==undefined){
               this.selectOp(1);
             }            
@@ -391,29 +357,24 @@ export class DashboardGeneralPage {
   }
 
   async llenarDatosGraficoStock(){
-    let temp1=[];    
+    let tempData=[];    
+    let tempLabel=[];
     if(this.ltStokResumen!=undefined){
       if(this.ltStokResumen.length>0){
         for (let index = 0; index < this.ltStokResumen.length; index++) {
           const element = await this.ltStokResumen[index];
-          await temp1.push(element.Cantidad);
-          await this.StockpieChartLabels.push(element.Grupo);
+          await tempData.push(element.Cantidad);
+          await tempLabel.push(element.Grupo);
           if((index.valueOf()+1) === this.cantMinMostrar.valueOf()){
             break;
           }
         }
-      }else{
-       console.log("AB")
       }      
-    }  
-    this.StockpieChartData = await temp1;
-    console.log("d",this.StockpieChartData);
-    console.log("l",this.StockpieChartLabels);
-    console.log("c",this.StockchartColor);
-    console.log("ty",this.StockpieChartType);
-    console.log("o",this.StockbaseOptions);
-    console.log("le",this.StockchartLegend);
-    console.log(this.CanbasStock)
+    }      
+    this.CanbasStock.data.datasets[0].data=tempData       
+    this.CanbasStock.data.labels=tempLabel
+    //this.CanbasStock.width = 400;
+    this.CanbasStock.update()   
   }
 
   async contarDatosStock(){    
@@ -438,6 +399,7 @@ export class DashboardGeneralPage {
   }
 
   async getFacCVAños(){
+    let meses=[];
     this.show.changeContentLoading("Cargando Facturas de Ventas")
     let añoActual = parseInt(this.FechaIni.split("-")[0])
     await this.con.getFactAnuales("V",1,añoActual).then(async (resV)=>{
@@ -456,18 +418,28 @@ export class DashboardGeneralPage {
             for (let index = 0; index < this.dataAñosV.length; index++) {
               const elementV =  this.dataAñosV[index];
               const elementC =  this.dataAñosC[index];
-              this.barChartLabels.push(elementV.Meses)
+              meses.push(elementV.Meses)
               totalC = totalC.valueOf()+elementC.Total.valueOf();
               totalV = totalV.valueOf()+elementV.Total.valueOf();
               facVenta.push(elementV.Total);
               facCompra.push(elementC.Total);
             }           
             let dataDatos=[];
-            dataDatos.push({data:facVenta,label:"Ventas"});
-            dataDatos.push({data:facCompra,label:"Compras"});
-            this.barChartData = await dataDatos;
+            dataDatos.push(
+              {data:facVenta,label:"Ventas", backgroundColor: this.colorBordePaste[0]}
+            );
+            dataDatos.push(
+              {data:facCompra,label:"Compras",backgroundColor: this.colorBordePaste[1]}
+            );
+            console.log(dataDatos)
+            this.CanvasFactura.data.datasets=dataDatos        
+            this.CanvasFactura.data.labels=meses        
+            
             this.totalFC = totalC.valueOf()/this.dataAñosV.length.valueOf();
             this.totalFV = totalV.valueOf()/this.dataAñosV.length.valueOf();
+            this.CanvasFactura.update();
+
+            //datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions" [legend]="barChartLegend" [chartType]="barChartType"
           }
         });
       }
@@ -488,6 +460,46 @@ export class DashboardGeneralPage {
     this.totalDeudaCobrar=0;
     this.totalDeudaPagar=0;
 
+    //#region Facturas
+    if(this.CanvasFactura.nativeElement!=undefined){          
+      this.CanvasFactura = new Chart(this.CanvasFactura.nativeElement, { 
+        type: 'bar',
+        data: {
+            labels: ["Compras","Ventas"],
+            datasets: [{      
+                label: 'Sin Caja',             
+                data:[],
+                borderWidth: 2
+            }]
+        },
+        
+        options: {          
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            },
+            legend: {
+              display: true,
+              labels: {
+                  fontColor: 'rgb(255, 99, 132)'
+              }
+            }
+        }  
+      });
+    }else{
+      this.CanvasFactura.data.datasets[0].data=[0,0,0]       
+      this.CanvasFactura.data.datasets[0].label="Sin Caja";
+      //this.CanvasCaja.update()
+    }
+    this.CanvasFactura.update()    
+    
+    console.log("gr caja", this.CanvasFactura)
+    
+    //#endregion
+
     //#region Caja Grafico
     if(this.CanvasCaja.nativeElement!=undefined){          
       this.CanvasCaja = new Chart(this.CanvasCaja.nativeElement, { 
@@ -497,24 +509,24 @@ export class DashboardGeneralPage {
             datasets: [{      
                 label: 'Sin Caja',             
                 data:[0,0,0],
-                backgroundColor: [                        
-                    'rgba(54, 162, 235, 0.2)',                        
-                    'rgba(75, 192, 192, 0.2)'                        
-                ],
-                borderColor: [                        
-                    'rgba(54, 162, 235, 1)',                        
-                    'rgba(75, 192, 192, 1)'                        
-                ],
+                backgroundColor: this.colorBordePaste,
                 borderWidth: 2
             }]
         },
-        options: {
+        
+        options: {          
             scales: {
                 yAxes: [{
                     ticks: {
                         beginAtZero:false
                     }
                 }]
+            },
+            legend: {
+              display: false,
+              labels: {
+                  fontColor: 'rgb(255, 99, 132)'
+              }
             }
         }  
       });
@@ -523,7 +535,7 @@ export class DashboardGeneralPage {
       this.CanvasCaja.data.datasets[0].label="Sin Caja";
       //this.CanvasCaja.update()
     }
-    this.CanvasCaja.update()
+    this.CanvasCaja.update()    
     this.selectPunVen={"Nombre":""}
     //#endregion
     
@@ -536,14 +548,7 @@ export class DashboardGeneralPage {
             datasets: [{      
                 label: 'Sin Caja',             
                 data:[0,0,0],
-                backgroundColor: [                        
-                    'rgba(54, 162, 235, 0.2)',                        
-                    'rgba(75, 192, 192, 0.2)'                        
-                ],
-                borderColor: [                        
-                    'rgba(54, 162, 235, 1)',                        
-                    'rgba(75, 192, 192, 1)'                        
-                ],
+                backgroundColor: this.colorBordePaste,
                 borderWidth: 2
             }]
         },
@@ -562,7 +567,44 @@ export class DashboardGeneralPage {
       this.CanvasDeuda.data.datasets[0].label="Sin Datos";
     }
     this.CanvasDeuda.update()
+    //#endregion
     
+    //#region Stock
+    if(this.CanbasStock.nativeElement!=undefined){          
+      this.CanbasStock = new Chart(this.CanbasStock.nativeElement, { 
+        type: 'pie',
+        data: {
+            labels: ["asd","asds"],            
+            datasets: [{      
+                label: 'Sin Caja',             
+                data:[3,5],
+                backgroundColor: this.colorBordePaste,
+                borderWidth: 2
+            }]           
+        },
+        options: {
+          legend: {
+            display: false,
+            labels: {
+                fontColor: 'rgb(255, 99, 132)'
+            }
+          },
+          animation:{
+            animateRotate:true,
+            animateScale:true
+          },
+          tooltipis:{
+            enable:true
+          },
+          responsive:true
+        }
+      });
+    }else{
+      this.CanbasStock.data.datasets[0].data=[0,0,0]       
+      this.CanbasStock.data.datasets[0].label="Sin Caja";      
+    }
+    this.CanbasStock.update()   
+    //#endregion
   }
   
   async getUsuarioCaja(IDSU,IDPT){

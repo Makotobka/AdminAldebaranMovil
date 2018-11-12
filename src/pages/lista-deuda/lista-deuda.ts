@@ -32,38 +32,78 @@ export class ListaDeudaPage {
     this.ltDeudaCliente = await this.archivo.leerArchivo(keyStorage.keyListaDeudaCliente);
     this.ltDeudaResCliente = await this.archivo.leerArchivo(keyStorage.keyListaResumenDeudaCliente); 
     this.ltDeudaProveedor = await this.archivo.leerArchivo(keyStorage.keyListaDeudaEmpresa); 
+    //console.log(this.ltDeudaProveedor)
     await this.ContenarDeudas();
   }
 
   ContenarDeudas(){    
     if(this.isCliente){
-      for (let i = 0; i < this.ltDeudaResCliente.length; i++) {
-        const principal:Deuda = this.ltDeudaResCliente[i];
-        principal.lista=[];
-        for (let j = 0; j < this.ltDeudaCliente.length; j++) {
-          const hija:Deuda = this.ltDeudaCliente[j];
-          if(principal.Nombre === hija.Nombre){
-            principal.lista.push(hija);
+      this.AgruparLista(this.ltDeudaCliente)
+    }else{
+      
+      this.AgruparLista(this.ltDeudaProveedor)
+      
+    }
+    console.log(this.listaData)
+    //this.orderLista(this.listaData);    
+  }
+
+  AgruparLista(lista:any[]){    
+    for (let i = 0; i < lista.length; i++) {
+      const item = lista[i];
+      let exis=false;
+      if(this.listaData.length>0){
+        for (let j = 0; j < this.listaData.length; j++) {
+          const padre = this.listaData[j];          
+          if(padre.Nombre === item.Nombre){
+            //console.log(padre.Deuda)
+            //console.log(item)
+            padre.Deuda = padre.Deuda.valueOf()+item.Deuda.valueOf();
+            padre.lista.push(item)
+            exis=true;
+            break;
           }
         }
-        this.orderLista(principal.lista);        
-        this.listaData.push(principal);
       }
-    }else{
-      for (let i = 0; i < this.ltDeudaProveedor.length; i++) {
-        const principal:Deuda = this.ltDeudaProveedor[i];
-        principal.lista=[];
-        this.listaData.push(principal);
+      
+      if(!exis){
+        let temp:Deuda = {
+          IDC:0,
+          IDF:0,
+          Deuda:item.Deuda,
+          Nombre:item.Nombre,
+          Fecha:undefined,
+          lista:[item]
+        }
+        this.listaData.push(temp);
+      }
+    } 
+    this.orderLista(this.listaData);
+    for(let c in this.listaData){
+      this.orderListaFechas(this.listaData[c].lista)
+    }
+    
+  }
+
+  orderListaFechas(lista:Deuda[]){
+    for (let i = 0; i < lista.length; i++) {
+      for (let j = i+1; j < lista.length; j++) {
+        let A:Date = new Date(lista[i].Fecha)
+        let B:Date = new Date(lista[j].Fecha)
+        if(A<=B){
+          const temp = lista[i];
+          lista[i] = lista[j];
+          lista[j] = temp;            
+        }
       }
     }
-    this.orderLista(this.listaData);    
   }
 
   orderLista(lista:Deuda[]){
     for (let i = 0; i < lista.length; i++) {
       for (let j = i+1; j < lista.length; j++) {
-        let A:Date = new Date(lista[i].Fecha)
-        let B:Date = new Date(lista[j].Fecha)
+        let A:number = lista[i].Deuda.valueOf()
+        let B:number = lista[j].Deuda.valueOf()
         if(A<=B){
           const temp = lista[i];
           lista[i] = lista[j];

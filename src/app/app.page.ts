@@ -9,6 +9,8 @@ import { ConfiguracionPage } from "../pages/configuracion/configuracion";
 import { StockPage } from "../pages/stock/stock";
 import { ListaDeudaPage } from "../pages/lista-deuda/lista-deuda";
 import { DetalleDeudaClientePage } from "../pages/detalle-deuda-cliente/detalle-deuda-cliente";
+import { FacturaComparacionPage } from "../pages/factura-comparacion/factura-comparacion";
+import { FacturaTopPage } from "../pages/factura-top/factura-top";
 
 export const paginas = [
     MyApp,
@@ -18,6 +20,8 @@ export const paginas = [
     CajaPage,
     DetalleCajaPage,
     FacturasPage,
+    FacturaComparacionPage,
+    FacturaTopPage,
     ConfiguracionPage,
     StockPage,
     ListaDeudaPage,

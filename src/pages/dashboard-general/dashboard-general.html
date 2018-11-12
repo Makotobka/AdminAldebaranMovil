@@ -57,7 +57,7 @@
                 </ion-label>
             </ion-item>
             <ion-item>
-                <canvas #barHoriCaja>  </canvas>
+                <canvas #barHoriCaja style="width=220px;height=220px">  </canvas>
             </ion-item>
         </ion-card-content>
 
@@ -83,7 +83,7 @@
                 </ion-label>
             </ion-item>
             <ion-item>
-                <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions" [legend]="barChartLegend" [chartType]="barChartType">
+                <canvas #CanvasFact baseChart>
                 </canvas>
             </ion-item>
         </ion-card-content>
@@ -107,48 +107,43 @@
         </ion-card-header>
 
         <ion-card-content>
-            <ion-item *ngIf="appType=='Minimos'">
-                <ion-label class="TextoJustificado TextoDescripcion">
-                    Total de Productos con bajo stock
-                </ion-label>
-                <ion-label class="TextoJustificado TextoNumeros">
-                    {{totalStock}}
-                </ion-label>
-            </ion-item>
-            <ion-item *ngIf="appType!='Minimos'">
-                <ion-label class="TextoJustificado TextoDescripcion">
-                    Total de Productos con alto stock
-                </ion-label>
-                <ion-label class="TextoJustificado TextoNumeros">
-                    {{totalStock}}
-                </ion-label>
-            </ion-item>
-            <ion-item *ngIf="appType=='Minimos'">
-                <ion-label class="TextoJustificado TextoDescripcion">
-                    Grupo de Productos con bajo stock
-                </ion-label>
-                <ion-label class="TextoJustificado TextoNumeros">
-                    {{GrupoMayorStockBajo.Grupo}}
-                </ion-label>
-            </ion-item>
-            <ion-item *ngIf="appType!='Minimos'">
-                <ion-label class="TextoJustificado TextoDescripcion">
-                    Grupo de Productos con alto stock
-                </ion-label>
-                <ion-label class="TextoJustificado TextoNumeros">
-                    {{GrupoMayorStockBajo.Grupo}}
-                </ion-label>
-            </ion-item>
-            <ion-item>
-                <canvas #CanvasPIE baseChart [data]="StockpieChartData" [labels]="StockpieChartLabels" [colors]="StockchartColor" [chartType]="StockpieChartType" [options]="StockbaseOptions" [legend]="StockchartLegend">
-                    </canvas>
-            </ion-item>
+            <ion-grid>
+                <ion-row>
+                    <ion-col *ngIf="appType=='Minimos'">
+                        Total de Productos con bajo stock
+                    </ion-col>
+                    <ion-col *ngIf="appType!='Minimos'">
+                        Total de Productos con alto stock
+                    </ion-col>
+                    <ion-col>
+                        {{totalStock}}
+                    </ion-col>
+                </ion-row>
+                <ion-row>
+                    <ion-col *ngIf="appType=='Minimos'">
+                        Grupo de Productos con bajo stock
+                    </ion-col>
+                    <ion-col *ngIf="appType!='Minimos'">
+                        Grupo de Productos con alto stock
+                    </ion-col>
+                    <ion-col>
+                        {{GrupoMayorStockBajo.Grupo}}
+                    </ion-col>
+                </ion-row>
+                <ion-row style="margin-top: 15px;">
+
+                    <ion-col>
+                        <canvas #CanvasPIE> </canvas>
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
         </ion-card-content>
     </ion-card>
 
     <ion-card>
-        <ion-card-header class="titulosCentados TextoJustificado">Cuentas x Cobrar VS Cuentas x Pagar</ion-card-header>
+        <ion-card-header class="titulosCentados TextoJustificado">Cta Cobrar/Ctas Pagar</ion-card-header>
         <ion-card-content>
+
             <ion-item>
                 <ion-label class="TextoJustificado TextoDescripcion">
                     Promedio de Pago a Credito
