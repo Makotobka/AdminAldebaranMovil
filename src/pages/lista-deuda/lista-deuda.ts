@@ -22,7 +22,7 @@ export class ListaDeudaPage {
   public ltDeudaResCliente:Deuda[]=[];  
   public ltDeudaProveedor:Deuda[]=[];
   public listaData:Deuda[]=[];
-  public isCliente:boolean=true;
+  public isCliente:boolean=true;    
 
   constructor(private archivo:ArchivoInternosProvider,public navCtrl: NavController, public navParams: NavParams) {
     this.isCliente = this.navParams.get("isCliente");
@@ -59,10 +59,12 @@ export class ListaDeudaPage {
     this.orderLista(this.listaData);    
   }
 
-  orderLista(lista:any[]){
+  orderLista(lista:Deuda[]){
     for (let i = 0; i < lista.length; i++) {
       for (let j = i+1; j < lista.length; j++) {
-        if(lista[i].Deuda.valueOf()<=lista[j].Deuda.valueOf()){
+        let A:Date = new Date(lista[i].Fecha)
+        let B:Date = new Date(lista[j].Fecha)
+        if(A<=B){
           const temp = lista[i];
           lista[i] = lista[j];
           lista[j] = temp;            

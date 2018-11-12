@@ -68,6 +68,7 @@ export class DashboardGeneralPage {
   //{data: [65, 59, 80, 81, 56, 55, 40], label: 'Series A'},
   //#endregion
   //#region Stock
+  @ViewChild('CanvasPIE') CanbasStock;
     public ltstockMinRes:any=[];
     public ltstockMaxRes:any=[];
     public ltstokMin:any=[];
@@ -134,17 +135,17 @@ export class DashboardGeneralPage {
     this.FechaIni = tempAux;
   }
 
-  async selectOp(val:number){    
+  async selectOp(val:number){   
+    this.ltStokResumen=[]
+    this.ltStok=[]
     if(val === 1){
-      //console.log("ABC")
-      if(this.ltstockMinRes.length>0){
+      if(this.ltstockMinRes.length>0){        
         this.ltStokResumen = this.ltstockMinRes;
       }
-      if(this.ltstokMin.length>0){
+      if(this.ltstokMin.length>0){        
         this.ltStok = this.ltstokMin;
       }     
     }else{
-      //console.log("CBA")
       if(this.ltstockMaxRes.length>0){
         this.ltStokResumen = this.ltstockMaxRes;
       }
@@ -315,11 +316,13 @@ export class DashboardGeneralPage {
   async getStock(){   
     this.show.changeContentLoading("Cargando Productos Escasos") 
     await this.con.getResStockBajo(this.Sucursal.ID,'B').then(async (resA)=>{
-      if(resA){
+      if(resA){        
         this.ltstockMinRes = await JSON.parse(this.con.data);
+        //console.log(this.ltstockMinRes)
         await this.con.getStockBajo(this.Sucursal.ID,'B').then(async (resB)=>{
           if(resB){
             this.ltstokMin = await JSON.parse(this.con.data)
+            //console.log(this.ltstokMin)
             if(this.ltstokMin!== undefined && this.ltstockMinRes!==undefined){
               this.selectOp(1);
             }            
@@ -329,6 +332,7 @@ export class DashboardGeneralPage {
       }else{
       } 
     }) 
+
     this.show.changeContentLoading("Cargando Productos Excedentes") 
     await this.con.getResStockBajo(this.Sucursal.ID,'A').then(async (resA)=>{
       if(resA){
@@ -398,32 +402,34 @@ export class DashboardGeneralPage {
             break;
           }
         }
+      }else{
+       console.log("AB")
       }      
     }  
     this.StockpieChartData = await temp1;
-    //console.log("d",this.StockpieChartData);
-    //console.log("l",this.StockpieChartLabels);
-    //console.log("c",this.StockchartColor);
-    //console.log("ty",this.StockpieChartType);
-    //console.log("o",this.StockbaseOptions);
-    //console.log("le",this.StockchartLegend);
+    console.log("d",this.StockpieChartData);
+    console.log("l",this.StockpieChartLabels);
+    console.log("c",this.StockchartColor);
+    console.log("ty",this.StockpieChartType);
+    console.log("o",this.StockbaseOptions);
+    console.log("le",this.StockchartLegend);
+    console.log(this.CanbasStock)
   }
 
   async contarDatosStock(){    
-    this.totalStock=0;
+    this.totalStock=0;    
     if(this.ltStokResumen!=undefined){
-      if(this.ltStokResumen.length>0){
+      if(this.ltStokResumen.length>0){        
         await this.ltStokResumen.forEach(grupo => {
           this.totalStock = this.totalStock.valueOf() + grupo.Cantidad.valueOf();
-        });    
+        });            
         await this.ltStokResumen.forEach(grupo => {
             if(this.GrupoMayorStockBajo.Cantidad<grupo.Cantidad){
               this.GrupoMayorStockBajo=grupo;
             }
         });
       }
-    } 
-    //console.log(this.GrupoMayorStockBajo)   
+    }     
   }
 
   goDetalleStock(){    
@@ -473,12 +479,14 @@ export class DashboardGeneralPage {
   async limpiarDatos(){    
     this.show.changeContentLoading("Limpiando Datos Antiguos");
     this.totalUsuarios=0;
-    this.totalProDiaDeuda=0
+    this.totalProDiaDeuda=0;
     this.totalVentasUsuarios=0;
     this.totalStock=0;
     this.totalVentasPunVenta=0;
-    this.ltStokResumen=[]
+    this.ltStokResumen=[];
     this.GrupoMayorStockBajo = {Cantidad:0,Grupo:"Desconocido"};   
+    this.totalDeudaCobrar=0;
+    this.totalDeudaPagar=0;
 
     //#region Caja Grafico
     if(this.CanvasCaja.nativeElement!=undefined){          

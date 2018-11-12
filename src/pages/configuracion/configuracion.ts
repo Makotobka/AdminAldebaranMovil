@@ -24,16 +24,19 @@ export class ConfiguracionPage {
   public Sucursal;  
   private antFechaIni;
   public ltSucursal:any[]=[];
+
   @ViewChild('tgCon') toogleConexion;
   
   constructor(private archivo:ArchivoInternosProvider,public con:ConexionHttpProvider,public view:ViewController ,public navCtrl: NavController, public navParams: NavParams) {    
     this.FechaFin = this.navParams.get("FechaFin");
     this.FechaIni = this.navParams.get("FechaIni");
     this.Sucursal = this.navParams.get("Sucursal");
+    //console.log(this.Sucursal)
     this.antFechaIni = this.navParams.get("FechaIni");
     if(this.Sucursal=== undefined){
       this.Sucursal={"ID":1,"AGENCIA":"No Seleccionado"};
     }
+    console.log(this.Sucursal)
   }
 
   ionViewDidLoad() {
@@ -53,15 +56,17 @@ export class ConfiguracionPage {
     let tempIni = this.FechaIni.split("T")[0];
     let tempFin = this.FechaFin.split("T")[0];
     let tempSuc;
+    console.log(this.ltSucursal)
+    console.log(this.Sucursal)
     for (let index = 0; index < this.ltSucursal.length; index++) {
       const element = this.ltSucursal[index];
-      if(element.AGENCIA === this.Sucursal){
+      if(element.AGENCIA === this.Sucursal.AGENCIA || element.AGENCIA === this.Sucursal){
         tempSuc = element;
         break;
       }
     }
-
-    if(tempSuc===undefined){
+    console.log(tempSuc)
+    if(tempSuc === undefined){
       tempSuc={"ID":1,"AGENCIA":"No Seleccionado"};
     }
 
