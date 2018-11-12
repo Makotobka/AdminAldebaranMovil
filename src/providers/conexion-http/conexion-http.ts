@@ -13,7 +13,9 @@ import { keyStorage } from '../archivo-internos/staticConfigStorage';
 @Injectable()
 export class ConexionHttpProvider {
 
-  private dirCone="http://localhost:54134/";
+  //private dirCone="http://localhost:54134/";
+  private dirCone="http://buhocorp.com/api/adm_aldebaran/farmaciajr/";
+  //http://buhocorp.com/api/adm_aldebaran/farmaciajr
 
   private opciones:RequestOptions;
 
