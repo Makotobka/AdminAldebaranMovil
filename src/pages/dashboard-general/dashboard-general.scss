@@ -1,14 +1,29 @@
 page-dashboard-general {
-    /*
-    text-align: center;
-    font-size: -webkit-xxx-large;
-    font-family: unset;
-    color: teal;
-*/
+    .content {
+        background-color: #27333317;
+    }
     .titulosCentados {
         text-align: center;
-        font-size: x-large;
-        font-family: sans-serif;
-        color: teal;
+        font-size: medium;
+        font-family: unset;
+        color: #333;
+        border-bottom: 2px solid lightgray;
+    }
+    .ion-content {
+        .scroll-content {
+            padding: 2px;
+        }
+    }
+    .item {
+        padding-left: 5px;
+    }
+    .TituloEscondido {
+        background-color: #333;
+        height: 180px;
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+        vertical-align: middle;
+        margin-bottom: -30%;
     }
 }

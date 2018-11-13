@@ -15,6 +15,7 @@ import { Deuda } from '../../estructuras/Deuda';
 import { templateJitUrl } from '@angular/compiler';
 import { ShowMessageProvider } from '../../providers/show-message/show-message';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { varColorBarra } from '../../app/app.config';
 
 /**
  * Generated class for the DashboardGeneralPage page.
@@ -46,8 +47,7 @@ export class DashboardGeneralPage {
     'rgb(4, 111, 155,0.8)',
     'rgb(255, 1, 255,0.8)'    
   ]
-
-
+        
   //#region Facturas
     private dataAñosC;
     private dataAñosV;
@@ -86,7 +86,7 @@ export class DashboardGeneralPage {
     public totalVentasPunVenta=0;
     public totalVentasUsuarios=0;    
   //#endregion
-  //#regino Deudas
+  //#region Deudas
     @ViewChild('barHoriDeuda') CanvasDeuda;  
     public totalDeudaPagar=0;
     public totalDeudaCobrar=0;
@@ -104,6 +104,7 @@ export class DashboardGeneralPage {
     let tempAux = temp.split("T")[0];
     this.FechaFin = tempAux;
     this.FechaIni = tempAux;
+    
   }
 
   async selectOp(val:number){   
@@ -183,13 +184,12 @@ export class DashboardGeneralPage {
   }
 
   async goSincronizar(isTap:boolean){   
-      await this.show.detenerTiempo();  
+      await this.show.detenerTiempo();        
       await this.limpiarDatos(); 
       await this.getStock(); 
-      await this.getFacCVAños();
-      //await this.getResumenFacV();
+      await this.getFacCVAños();      
       await this.getPuntoVenta(this.Sucursal.ID);
-      await this.getDeudas(this.Sucursal.ID);
+      await this.getDeudas(this.Sucursal.ID);      
       await this.guardarInformacion();
       
   }
@@ -374,7 +374,8 @@ export class DashboardGeneralPage {
     this.CanbasStock.data.datasets[0].data=tempData       
     this.CanbasStock.data.labels=tempLabel
     //this.CanbasStock.width = 400;
-    this.CanbasStock.update()   
+    this.CanbasStock.resize()
+    this.CanbasStock.update()  
   }
 
   async contarDatosStock(){    
@@ -400,6 +401,7 @@ export class DashboardGeneralPage {
 
   async getFacCVAños(){
     let meses=[];
+    const ultimosNMes=4;
     this.show.changeContentLoading("Cargando Facturas de Ventas")
     let añoActual = parseInt(this.FechaIni.split("-")[0])
     await this.con.getFactAnuales("V",1,añoActual).then(async (resV)=>{
@@ -411,10 +413,10 @@ export class DashboardGeneralPage {
             this.dataAñosC = await JSON.parse(this.con.data) 
             let facVenta=[];
             let facCompra=[];
-            let dataLabel=[]
             let totalV:number=0,totalC:number=0;
             this.totalFC=0;
             this.totalFV=0;
+
             for (let index = 0; index < this.dataAñosV.length; index++) {
               const elementV =  this.dataAñosV[index];
               const elementC =  this.dataAñosC[index];
@@ -424,20 +426,29 @@ export class DashboardGeneralPage {
               facVenta.push(elementV.Total);
               facCompra.push(elementC.Total);
             }           
+            
             let dataDatos=[];
+            //-------------------------------------//
+            facVenta = facVenta.slice(facVenta.length-ultimosNMes,facVenta.length);
+            facCompra = facCompra.slice(facCompra.length-ultimosNMes,facCompra.length);
+            meses = meses.slice(meses.length-ultimosNMes,meses.length);              
+            //-------------------------------------//
             dataDatos.push(
               {data:facVenta,label:"Ventas", backgroundColor: this.colorBordePaste[0]}
             );
             dataDatos.push(
               {data:facCompra,label:"Compras",backgroundColor: this.colorBordePaste[1]}
             );
-            console.log(dataDatos)
-            this.CanvasFactura.data.datasets=dataDatos        
-            this.CanvasFactura.data.labels=meses        
             
+            this.CanvasFactura.data.datasets=dataDatos        
+            this.CanvasFactura.data.labels=meses    
+            console.log(dataDatos)
+            console.log(meses)
             this.totalFC = totalC.valueOf()/this.dataAñosV.length.valueOf();
             this.totalFV = totalV.valueOf()/this.dataAñosV.length.valueOf();
-            this.CanvasFactura.update();
+
+            this.CanvasFactura.resize();
+            this.CanvasFactura.update()   
 
             //datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions" [legend]="barChartLegend" [chartType]="barChartType"
           }
@@ -459,44 +470,52 @@ export class DashboardGeneralPage {
     this.GrupoMayorStockBajo = {Cantidad:0,Grupo:"Desconocido"};   
     this.totalDeudaCobrar=0;
     this.totalDeudaPagar=0;
+    this.minimoProPago=0
+
 
     //#region Facturas
-    if(this.CanvasFactura.nativeElement!=undefined){          
-      this.CanvasFactura = new Chart(this.CanvasFactura.nativeElement, { 
-        type: 'bar',
-        data: {
-            labels: ["Compras","Ventas"],
-            datasets: [{      
-                label: 'Sin Caja',             
-                data:[],
-                borderWidth: 2
-            }]
-        },
-        
-        options: {          
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero:true
-                    }
-                }]
-            },
-            legend: {
-              display: true,
-              labels: {
-                  fontColor: 'rgb(255, 99, 132)'
+    try{
+      if(this.CanvasFactura.nativeElement!=undefined){          
+        this.CanvasFactura = new Chart(this.CanvasFactura.nativeElement, { 
+          type: 'bar',
+          data: {
+              labels: ["Compras","Ventas"],
+              datasets: [{      
+                  label: 'Sin Caja',             
+                  data:[],
+                  borderWidth: 2
+              }]
+          },
+          
+          options: {             
+              scales: {
+                  yAxes: [{
+                      ticks: {
+                          beginAtZero:true
+                      }
+                  }]
+              },
+              legend: {
+                display: true,
+                labels: {
+                    fontColor: 'rgb(255, 99, 132)'
+                }
               }
-            }
-        }  
-      });
-    }else{
-      this.CanvasFactura.data.datasets[0].data=[0,0,0]       
-      this.CanvasFactura.data.datasets[0].label="Sin Caja";
-      //this.CanvasCaja.update()
+          }  
+        });
+      }else{
+        this.CanvasFactura.data.datasets[0].data=[0,0,0]       
+        this.CanvasFactura.data.datasets[0].label="Sin Caja";
+        //this.CanvasCaja.update()
+      }
+      //this.CanvasFactura.resize();    
+      this.CanvasFactura.update()    
+      
+      console.log("gr caja", this.CanvasFactura)
+    }catch(ex){
+
     }
-    this.CanvasFactura.update()    
     
-    console.log("gr caja", this.CanvasFactura)
     
     //#endregion
 
@@ -514,7 +533,9 @@ export class DashboardGeneralPage {
             }]
         },
         
-        options: {          
+        options: {              
+          //responsive:false,    
+          //maintainAspectRatio: false,          
             scales: {
                 yAxes: [{
                     ticks: {
@@ -553,12 +574,19 @@ export class DashboardGeneralPage {
             }]
         },
         options: {
+          responsive:true,       
             scales: {
                 yAxes: [{
                     ticks: {
                         beginAtZero:true
                     }
                 }]
+            },
+            legend: {
+              display: false,
+              labels: {
+                  fontColor: 'rgb(255, 99, 132)'
+              }
             }
         }  
       });
@@ -584,9 +612,10 @@ export class DashboardGeneralPage {
         },
         options: {
           legend: {
-            display: false,
-            labels: {
-                fontColor: 'rgb(255, 99, 132)'
+            display: true,
+            position:"bottom",
+            labels:{
+              fontSize:10
             }
           },
           animation:{
@@ -596,13 +625,15 @@ export class DashboardGeneralPage {
           tooltipis:{
             enable:true
           },
-          responsive:true
+          responsive:false,
+          maintainAspectRatio:false
         }
       });
     }else{
       this.CanbasStock.data.datasets[0].data=[0,0,0]       
       this.CanbasStock.data.datasets[0].label="Sin Caja";      
-    }
+    }    
+    this.CanbasStock.resize()
     this.CanbasStock.update()   
     //#endregion
   }

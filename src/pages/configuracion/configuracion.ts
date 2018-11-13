@@ -3,6 +3,7 @@ import { ArchivoInternosProvider } from './../../providers/archivo-internos/arch
 import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
 import { ConexionHttpProvider } from '../../providers/conexion-http/conexion-http';
+import { varColorBarra } from '../../app/app.config';
 
 /**
  * Generated class for the ConfiguracionPage page.

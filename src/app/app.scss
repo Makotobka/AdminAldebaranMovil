@@ -18,14 +18,14 @@
 }
 
 .TextoDescripcion {
-    font-family: sans-serif;
+    font-family: unset;
     font-style: normal;
     font-size: small;
 }
 
 .TextoNumeros {
     font-weight: bolder;
-    font-family: initial;
+    font-family: unset;
     font-style: normal;
     font-size: larger;
     text-align: end;
@@ -46,7 +46,7 @@
         }
     }
     .card-content {
-        padding: 0 15px 5px 15px;
+        padding: 5px 15px 5px 15px;
     }
 }
 
@@ -54,4 +54,30 @@
     text-align: end;
 }
 
-.alertDialogo {}
+.card {
+    border-radius: 10px 10px 10px 10px;
+    //box-shadow: 5px 5px 5px 5px;
+    margin: 15px 7px 15px 7px;
+    .card-header {
+        padding: 10px;
+    }
+    .card-content {
+        padding: 10px;
+    }
+}
+
+.card-md {
+    width: calc(100% - 14px);
+}
+
+.side-menu {
+    .list-menu {
+        .item {
+            //background-color: rgb(244, 243, 245);
+            padding-left: 10px
+        }
+    }
+    .animate-item {
+        animation: flipInX 0.75s;
+    }
+}

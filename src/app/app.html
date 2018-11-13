@@ -1,44 +1,41 @@
 <ion-menu [content]="content">
-    <ion-content>
-        <ion-list no-lines>
+    <ion-header>
+        <ion-toolbar [color]="colorBarra">
+            <ion-title>
+                Menu
+            </ion-title>
+            <ion-buttons start>
+                <button ion-button icon-only>
+                    <ion-icon name="globe"></ion-icon>
+                </button>
+            </ion-buttons>
+        </ion-toolbar>
+    </ion-header>
 
-            <ion-list-header>
-                Facturas
-            </ion-list-header>
-            <ion-item tappable (click)="goPage('Facturas Actuales')">
-                Facturas Generadas Hoy
+    <ion-content class="side-menu">
+        <ion-list class="list-menu">
+            <ion-item *ngFor="let itemPadre of listaOpciones">
+                <button ion-item no-lines (click)="itemPadre.enable = !itemPadre.enable">
+                    {{itemPadre.Nombre}}
+                    <ion-icon item-left name="{{itemPadre.icono}}"></ion-icon>                
+                    <ion-icon *ngIf="itemPadre.enable" item-right name="remove"></ion-icon>
+                    <ion-icon *ngIf="!itemPadre.enable" item-right name="add"></ion-icon>
+                </button>
+                <div *ngIf="itemPadre.enable">
+                    <ion-item menuClose *ngFor="let itemHija of itemPadre.lista" (click)="goPage(itemHija.codigo)">
+                        {{itemHija.Nombre}}
+                        <ion-icon item-left name="arrow-dropright"></ion-icon>
+                    </ion-item>
+                </div>
             </ion-item>
-            <ion-item tappable (click)="goPage('Facturas por Fechas')" *ngIf="con.isOnline">
-                Facturas por Fechas
-            </ion-item>
-            <ion-item tappable (click)="goPage('Facturas comparacion')">
-                Facturas por Fechas
-            </ion-item>
-            <ion-list-header>
-                Stock
-            </ion-list-header>
-
-            <ion-item tappable (click)="goPage('Stock Minimo')">
-                Stock Minimo
-            </ion-item>
-            <ion-item tappable (click)="goPage('Stock Maximo')">
-                Stock Maximo
-            </ion-item>
-
-            <ion-list-header>
-                Deudas
-            </ion-list-header>
-
-            <ion-item tappable (click)="goPage('Deudas de Clientes')">
-                Cuentas X Cobrar
-            </ion-item>
-            <ion-item tappable (click)="goPage('Deudas a Proveedores')">
-                Cuentas X Pagar
-            </ion-item>
-
-
         </ion-list>
     </ion-content>
+
+    <ion-footer>
+        <ion-toolbar color="primary">
+            <ion-title>©Buho Corporation</ion-title>
+        </ion-toolbar>
+    </ion-footer>
 </ion-menu>
 
 

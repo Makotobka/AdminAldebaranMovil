@@ -7,39 +7,43 @@
 <ion-header>
 
     <ion-navbar>
-        <ion-title>{{Sucursal.AGENCIA}}</ion-title>
+        <ion-title></ion-title>
         <ion-buttons end>
-            <button ion-button icon-only (click)="goSincronizar(true)">
-                <img style="height: 100%;" src="../../assets/imgs/update.png" >
+            <button ion-button icon-only (click)="goSincronizar(true)">                    
+                <ion-icon name="refresh" style="color: white;"></ion-icon>
             </button>
             <button ion-button icon-only (click)="goConfigurar()">
-                <ion-icon name="settings"></ion-icon>
+                <ion-icon name="settings" style="color: white;"></ion-icon>
             </button>
         </ion-buttons>
         <button ion-button menuToggle>
             <ion-icon name="menu"></ion-icon>
         </button>
     </ion-navbar>
-
 </ion-header>
 
-
-<ion-content padding>
-
+<ion-content>
+    <div class="TituloEscondido">
+        <div>
+            <h2 style="margin-top: 0px; color: white; padding-top: 30px; margin: 0">
+                {{Sucursal.AGENCIA}}
+            </h2>
+        </div>
+    </div>
     <ion-card>
-        <ion-card-header>
+        <ion-card-header STY>
             <ion-item class="titulosCentados TextoJustificado">
-                Ventas Diarias
+                VENTAS DIARIAS
             </ion-item>
+        </ion-card-header>
+        <ion-card-content>
             <ion-item>
                 <ion-segment [(ngModel)]="typeCaja">
-                    <ion-segment-button *ngFor="let PV of ltPV" (ionSelect)="selectPV(PV)" value="PV">
+                    <ion-segment-button *ngFor="let PV of ltPV " (ionSelect)="selectPV(PV)" value="{{PV}}">
                         {{PV.Nombre}}
                     </ion-segment-button>
                 </ion-segment>
             </ion-item>
-        </ion-card-header>
-        <ion-card-content>
             <ion-item>
                 <ion-label class="TextoJustificado TextoDescripcion">
                     Total de Ventas Diarias
@@ -50,21 +54,21 @@
             </ion-item>
             <ion-item>
                 <ion-label class="TextoJustificado TextoDescripcion">
-                    Total de Ventas de {{selectPunVen.Nombre}}
+                    Ventas de {{selectPunVen.Nombre}}
                 </ion-label>
                 <ion-label class="TextoJustificado TextoNumeros">
                     $ {{totalVentasPunVenta | redondear}}
                 </ion-label>
             </ion-item>
-            <ion-item>
-                <canvas #barHoriCaja style="width=220px;height=220px">  </canvas>
+            <ion-item style="max-height: 220px;">
+                <canvas #barHoriCaja style="height:20vw;">  </canvas>
             </ion-item>
         </ion-card-content>
 
     </ion-card>
 
     <ion-card>
-        <ion-card-header class="titulosCentados TextoJustificado">Facturación Mensual</ion-card-header>
+        <ion-card-header class="titulosCentados TextoJustificado">FACTURACION MENSUAL</ion-card-header>
         <ion-card-content>
             <ion-item>
                 <ion-label class="TextoJustificado TextoDescripcion">
@@ -92,7 +96,7 @@
     <ion-card>
         <ion-card-header>
             <ion-item class="titulosCentados TextoJustificado">
-                Movimientos de Stock
+                MOVIMIENTOS DE STOCK
             </ion-item>
             <ion-item>
                 <ion-segment [(ngModel)]="appType">
@@ -109,31 +113,19 @@
         <ion-card-content>
             <ion-grid>
                 <ion-row>
-                    <ion-col *ngIf="appType=='Minimos'">
+                    <ion-col *ngIf="appType=='Minimos'" class="TextoDescripcion TextoJustificado">
                         Total de Productos con bajo stock
                     </ion-col>
-                    <ion-col *ngIf="appType!='Minimos'">
+                    <ion-col *ngIf="appType!='Minimos'" class="TextoDescripcion TextoJustificado">
                         Total de Productos con alto stock
                     </ion-col>
-                    <ion-col>
+                    <ion-col class="TextoNumeros">
                         {{totalStock}}
                     </ion-col>
                 </ion-row>
-                <ion-row>
-                    <ion-col *ngIf="appType=='Minimos'">
-                        Grupo de Productos con bajo stock
-                    </ion-col>
-                    <ion-col *ngIf="appType!='Minimos'">
-                        Grupo de Productos con alto stock
-                    </ion-col>
-                    <ion-col>
-                        {{GrupoMayorStockBajo.Grupo}}
-                    </ion-col>
-                </ion-row>
                 <ion-row style="margin-top: 15px;">
-
                     <ion-col>
-                        <canvas #CanvasPIE> </canvas>
+                        <canvas #CanvasPIE style="height:80vw;"> </canvas>
                     </ion-col>
                 </ion-row>
             </ion-grid>
@@ -141,29 +133,39 @@
     </ion-card>
 
     <ion-card>
-        <ion-card-header class="titulosCentados TextoJustificado">Cta Cobrar/Ctas Pagar</ion-card-header>
+        <ion-card-header class="titulosCentados TextoJustificado">CTA COBRAR/CTA PAGAR</ion-card-header>
         <ion-card-content>
-
-            <ion-item>
-                <ion-label class="TextoJustificado TextoDescripcion">
-                    Promedio de Pago a Credito
-                </ion-label>
-                <ion-label class="TextoJustificado TextoNumeros">
-                    {{totalProDiaDeuda | redondear}} Dias
-                </ion-label>
-            </ion-item>
-            <ion-item>
-                <ion-label class="TextoJustificado TextoDescripcion">
-                    Minino {{minimoProPago}} Dias
-                </ion-label>
-                <ion-label class="TextoJustificado TextoDescripcion">
-                    Maximo {{maximoProPago}} Dias
-                </ion-label>
-            </ion-item>
-
-            <ion-item>
-                <canvas #barHoriDeuda></canvas>
-            </ion-item>
+            <ion-grid>
+                <ion-row>
+                    <ion-col class="TextoJustificado TextoDescripcion" col-8>
+                        Promedio de Pago a Credito:
+                    </ion-col>
+                    <ion-col class="TextoJustificado TextoNumeros" col-4>
+                        {{totalProDiaDeuda | redondearEnteros}} Dias
+                    </ion-col>
+                </ion-row>
+                <ion-row>
+                    <ion-col class="TextoJustificado TextoDescripcion" col-8>
+                        Promedio Minino de Pago:
+                    </ion-col>
+                    <ion-col class="TextoJustificado TextoNumeros" col-4>
+                        {{minimoProPago | redondearEnteros}} Dias
+                    </ion-col>
+                </ion-row>
+                <ion-row>
+                    <ion-col class="TextoJustificado TextoDescripcion" col-8>
+                        Promedio Maximo de Pago:
+                    </ion-col>
+                    <ion-col class="TextoJustificado TextoNumeros" col-4>
+                        {{maximoProPago | redondearEnteros}} Dias
+                    </ion-col>
+                </ion-row>
+                <ion-row>
+                    <ion-col>
+                        <canvas #barHoriDeuda style="height:20vw;"></canvas>
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
         </ion-card-content>
     </ion-card>
 </ion-content>
