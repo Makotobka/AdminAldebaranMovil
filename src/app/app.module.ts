@@ -20,7 +20,7 @@ import { ShowMessageProvider } from '../providers/show-message/show-message';
     paginas
   ],
   imports: [
-    BrowserModule,
+    BrowserModule,    
     IonicModule.forRoot(MyApp),
     IonicStorageModule.forRoot(staticConfigStorage),
     importaciones

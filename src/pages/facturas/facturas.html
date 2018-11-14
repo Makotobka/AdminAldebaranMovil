@@ -5,11 +5,9 @@
   Ionic pages and navigation.
 -->
 <ion-header>
-
     <ion-navbar>
         <ion-title class="TextoCentrado">{{titulo}}</ion-title>
     </ion-navbar>
-
 </ion-header>
 
 
@@ -25,42 +23,47 @@
             <ion-label>Fin</ion-label>
             <ion-datetime class="TextoJustificado" displayFormat="MMM DD YYYY" [(ngModel)]="FechaFin"></ion-datetime>
         </ion-item>
-        <div text-center>
-            <button on-click="getResumenFacV()" end ion-button round>Buscar</button>
-        </div>
-    </ion-card>
 
+        <button on-click="getResumenFacV()" ion-button full round>Consultar</button>
+    </ion-card>
 
     <ion-card class="cardTable">
         <ion-card-header on-click="desplFV=!desplFV">
-            <ion-item>
-                <ion-label>
+            <ion-row (click)="desFV=!desFV">
+                <ion-col col-8>
                     Facturas de Ventas
-                </ion-label>
-                <ion-label>
-                    <ion-buttons end>
-                        $ {{totalFV | redondear}}
-                    </ion-buttons>
-                </ion-label>
-            </ion-item>
+                </ion-col>
+                <ion-col col-4 class="colNumber">
+                    $ {{totalFV | redondear}}
+                </ion-col>
+            </ion-row>
         </ion-card-header>
         <ion-card-content *ngIf="desplFV">
             <ion-grid>
-                <ion-row *ngFor="let item of listFV">
-                    <ion-col>
-                        {{item.NomPV}}
+                <ion-row class="titulos">
+                    <ion-col col-4>
+                        Usuario
                     </ion-col>
-                    <ion-col>
-                        {{item.NomUs}}
+                    <ion-col col-5>
+                        Forma de Pago
                     </ion-col>
-                    <ion-col>
-                        {{item.FormaPago}}
+                    <ion-col col-3>
+                        Total
                     </ion-col>
+                </ion-row>
+                <ion-row class="datos">
                     <ion-col>
-                        {{item.Estado}}
-                    </ion-col>
-                    <ion-col>
-                        $ {{item.Total}}
+                        <ion-row *ngFor="let venta of listFV">
+                            <ion-col col-4>
+                                {{venta.NomUs}}
+                            </ion-col>
+                            <ion-col col-4>
+                                {{venta.FormaPago}}
+                            </ion-col>
+                            <ion-col col-4 class="colNumber">
+                                $ {{venta.Total | redondear}}
+                            </ion-col>
+                        </ion-row>
                     </ion-col>
                 </ion-row>
             </ion-grid>
@@ -69,38 +72,44 @@
 
     <ion-card class="cardTable">
         <ion-card-header on-click="desplFC=!desplFC">
-            <ion-item>
-                <ion-label>
+            <ion-row (click)="desFV=!desFV">
+                <ion-col col-8>
                     Facturas de Compras
-                </ion-label>
-                <ion-label>
-                    <ion-buttons end>
-                        $ {{totalFC | redondear}}
-                    </ion-buttons>
-                </ion-label>
-            </ion-item>
+                </ion-col>
+                <ion-col col-4 class="colNumber">
+                    $ {{totalFC | redondear}}
+                </ion-col>
+            </ion-row>
         </ion-card-header>
         <ion-card-content *ngIf="desplFC">
             <ion-grid>
-                <ion-row *ngFor="let item of listFC">
-                    <ion-col>
-                        {{item.NomPV}}
+                <ion-row class="titulos">
+                    <ion-col col-4>
+                        Usuario
                     </ion-col>
-                    <ion-col>
-                        {{item.NomUs}}
+                    <ion-col col-5>
+                        Forma de Pago
                     </ion-col>
-                    <ion-col>
-                        {{item.FormaPago}}
+                    <ion-col col-3>
+                        Total
                     </ion-col>
+                </ion-row>
+                <ion-row class="datos">
                     <ion-col>
-                        {{item.Estado}}
-                    </ion-col>
-                    <ion-col>
-                        $ {{item.Total}}
+                        <ion-row *ngFor="let venta of listFC">
+                            <ion-col col-4>
+                                {{venta.NomUs}}
+                            </ion-col>
+                            <ion-col col-4>
+                                {{venta.FormaPago}}
+                            </ion-col>
+                            <ion-col col-4 class="colNumber">
+                                $ {{venta.Total | redondear}}
+                            </ion-col>
+                        </ion-row>
                     </ion-col>
                 </ion-row>
             </ion-grid>
         </ion-card-content>
     </ion-card>
-
 </ion-content>

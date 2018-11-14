@@ -8,6 +8,7 @@ import { PipesModule } from '../pipes/pipes.module';
 import { IonicStorageModule } from '@ionic/storage';
 import { staticConfigStorage } from '../providers/archivo-internos/staticConfigStorage';
 
+
 export const importaciones = [
     
     BrowserModule,

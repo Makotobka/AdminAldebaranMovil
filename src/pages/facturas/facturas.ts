@@ -14,11 +14,17 @@ import { ShowMessageProvider } from '../../providers/show-message/show-message';
  */
 
 @IonicPage()
-@Component({
+@Component({ 
   selector: 'page-facturas',
   templateUrl: 'facturas.html',
 })
 export class FacturasPage {
+  public event = {
+    month: '1990-02-19',
+    timeStarts: '07:43',
+    timeEnds: '1990-02-20',
+    time:'07:00'
+  }
   public Sucursal={"ID":1};
   public listFC;
   public listFV;
@@ -26,15 +32,15 @@ export class FacturasPage {
   public totalFV;
   public estado:boolean;
   public titulo:string;
-  public FechaIni:Date;
-  public FechaFin:Date;
+  public FechaIni:string;
+  public FechaFin:string;
 
 
   constructor(private show:ShowMessageProvider,private archivo:ArchivoInternosProvider ,public con:ConexionHttpProvider ,public navCtrl: NavController, public navParams: NavParams) {    
     this.estado = this.navParams.get("estado");
     this.titulo = this.navParams.get("titulo");
-    this.FechaIni = new Date();
-    this.FechaFin = new Date();
+    this.FechaIni = new Date().toISOString().split('T')[0];
+    this.FechaFin = (new Date()).toISOString().split('T')[0];
   }
 
   async ionViewDidLoad() {
@@ -42,6 +48,17 @@ export class FacturasPage {
     if(this.estado){    
       let fecha = await this.archivo.leerArchivo(keyStorage.keyFechaSistema);
       await this.getResumenFacV(fecha);       
+    }
+  }
+
+  changeVal(valor:any){
+    //console.log(valor)
+    if(valor!==undefined){
+      if(valor.FormaPago==="CONTADOR"){
+        return "CON";
+      }else{
+        return "CRE";
+      }
     }
   }
 
@@ -53,12 +70,15 @@ export class FacturasPage {
     this.Sucursal={"ID":1};    
     let tempFI;
     let tempFF;
+    console.log(FechaSystema)
+    console.log(this.FechaIni)
+    console.log(this.FechaFin)
     if(FechaSystema === undefined){
       tempFI = this.FechaIni;
       tempFF = this.FechaFin;
     }else{
-      tempFI=FechaSystema.split('T')[0];
-      tempFF=FechaSystema.split('T')[0];
+      tempFI=FechaSystema;
+      tempFF=FechaSystema;
     }
     this.con.getResFac("V",tempFI,tempFF,this.Sucursal.ID).then(async (resV)=>{
       if(resV){
@@ -80,11 +100,16 @@ export class FacturasPage {
 
   async getSumatoria(listContar:IntFactura[]){
     let total=0;
-    await listContar.forEach(element => {
-      if(element.Estado==="VIGENTE")
-      total+=element.Total;
-    });
+    console.log(listContar)
+    
+    if(listContar!==undefined){
+      await listContar.forEach(element => {
+        if(element.Estado==="VIGENTE")
+        total+=element.Total;
+      });      
+    }
     return total;
+    
   }
 
 }

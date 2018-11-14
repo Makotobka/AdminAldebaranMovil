@@ -16,28 +16,38 @@
 <ion-content padding>
     <ion-card class="cardTable" *ngFor="let item of ltStockGrupo">
         <ion-card-header on-click="item.desplFC=!item.desplFC">
-            <ion-item>
-                <ion-label>
+            <ion-row>
+                <ion-col col-8>
                     {{item.Grupo}}
-                </ion-label>
-                <ion-label>
-                    <ion-buttons end>
-                        {{getCantidad(item)}} Items
-                    </ion-buttons>
-                </ion-label>
-            </ion-item>
+                </ion-col>
+                <ion-col col-4 class="colNumber">
+                    {{getCantidad(item)}} Items
+                </ion-col>
+            </ion-row>
         </ion-card-header>
         <ion-card-content *ngIf="item.desplFC">
-            <ion-list *ngFor="let elemet of item.lista">
-                <ion-item>
-                    <ion-label class="TextoJustificado">
-                        {{elemet.Producto}}
-                    </ion-label>
-                    <ion-label class="alineadoIzq">
-                        {{elemet.Stock}} Unids
-                    </ion-label>
-                </ion-item>
-            </ion-list>
+            <ion-grid>
+                <ion-row class="titulos">
+                    <ion-col col-8>
+                        Descripcion
+                    </ion-col>
+                    <ion-col col-4 style="text-align: center;">
+                        Stock
+                    </ion-col>
+                </ion-row>
+                <ion-row class="datos">
+                    <ion-col>
+                        <ion-row *ngFor="let elemet of item.lista">
+                            <ion-col col-8>
+                                {{elemet.Producto}}
+                            </ion-col>
+                            <ion-col col-4 class="colNumber">
+                                {{elemet.Stock}} Unids
+                            </ion-col>
+                        </ion-row>
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
         </ion-card-content>
     </ion-card>
 </ion-content>

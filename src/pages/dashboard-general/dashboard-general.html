@@ -171,16 +171,16 @@
 </ion-content>
 
 <ion-footer>
-    <ion-toolbar color="light">
-        <ion-label>
+    <ion-toolbar color="primary">
+        <ion-label style="color: white">
             Ultima Actualizacion: {{FechaIni | date}}
         </ion-label>
         <ion-buttons end>
             <button ion-button icon-only>
-                <ion-label *ngIf="con.isOnline" style="color: green">
+                <ion-label *ngIf="con.isOnline" style="color: white">
                     Online
                 </ion-label>
-                <ion-label *ngIf="!con.isOnline" style="color: red">
+                <ion-label *ngIf="!con.isOnline" style="color: #ffe600">
                     Offline
                 </ion-label>
             </button>

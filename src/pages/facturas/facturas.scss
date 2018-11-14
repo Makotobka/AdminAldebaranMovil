@@ -1,20 +1,73 @@
 page-facturas {
     .cardTable {
         .card-header {
-            background-color: aquamarine;
-            padding: 5px 15px 0 15px;
-            .item {
-                background-color: transparent;
-                //border-style: ridge;
-                padding: 0 0 0 0;
+            background-color: color($colors, flat-turquoise);
+            padding: 10px;
+            .row {
+                .colNumber {
+                    text-align: end;
+                    font-weight: bolder;
+                }
+                .col {}
             }
         }
         .card-content {
+            font-size: x-small;
             padding: 0 15px 5px 15px;
             .grid {
+                .titulos {
+                    text-align: start;
+                    border-bottom: 2px solid darkgray;
+                    .colNumber {
+                        text-align: end;
+                        font-weight: bolder;
+                    }
+                }
+                .datos {
+                    .col {
+                        //padding-bottom: 0px;
+                        .row {
+                            .col {
+                                text-align: start;
+                            }
+                            .colNumber {
+                                text-align: end;
+                                font-weight: bolder;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    .tablaFacturas {
+        .cabezera {
+            border: 2px solid black;
+            background-color: #00000021;
+            padding: 3px;
+            border-radius: 10px;
+        }
+        .detalle {
+            padding-top: 10px;
+            padding-bottom: 10px;
+            border-left: 2px solid black;
+            border-right: 2px solid black;
+            border-bottom: 1px solid #e4e2e2f1;
+            .colNumber {
+                text-align: center;
+            }
+        }
+        .items {
+            border-top: 0px solid black;
+            border-bottom: 2px solid black;
+            border-left: 2px solid black;
+            border-right: 2px solid black;
+            .col {
                 .row {
-                    //border-style: double;
-                    .col {}
+                    .colNumber {
+                        text-align: end;
+                        font-weight: bolder;
+                    }
                 }
             }
         }

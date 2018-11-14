@@ -460,6 +460,7 @@ export class DashboardGeneralPage {
   }
 
   async limpiarDatos(){    
+    
     this.show.changeContentLoading("Limpiando Datos Antiguos");
     this.totalUsuarios=0;
     this.totalProDiaDeuda=0;
