@@ -35,21 +35,6 @@
     text-align: center;
 }
 
-.cardTable {
-    .card-header {
-        background-color: aquamarine;
-        padding: 5px 15px 0 15px;
-        .item {
-            background-color: transparent;
-            //border-style: ridge;
-            padding: 0 0 0 0;
-        }
-    }
-    .card-content {
-        padding: 5px 15px 5px 15px;
-    }
-}
-
 .alineadoIzq {
     text-align: end;
 }
@@ -84,4 +69,49 @@
 
 .animate-item-slow {
     animation: flipInX 0.50s;
+}
+
+.cardTable {
+    .card-header {
+        background-color: color($colors, secondary);
+        padding: 10px;
+        .row {
+            .colNumber {
+                text-align: end;
+                font-weight: bolder;
+            }
+            .col {
+                word-wrap: break-word;
+                white-space: normal;
+            }
+        }
+    }
+    .card-content {
+        font-size: small;
+        padding: 0 15px 5px 15px;
+        .grid {
+            .titulos {
+                text-align: start;
+                border-bottom: 2px solid darkgray;
+                .colNumber {
+                    text-align: end;
+                    font-weight: bolder;
+                }
+            }
+            .datos {
+                .col {
+                    //padding-bottom: 0px;
+                    .row {
+                        .col {
+                            text-align: start;
+                        }
+                        .colNumber {
+                            text-align: end;
+                            font-weight: bolder;
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

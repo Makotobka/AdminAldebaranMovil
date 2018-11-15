@@ -17,44 +17,47 @@
 
 <ion-content padding>
     <!--<ion-searchbar></ion-searchbar>-->
+
     <ion-card class="cardTable" *ngFor="let item of listaData">
         <ion-card-header on-click="item.desplFC=!item.desplFC">
-            <ion-item>
-                <ion-label>
+            <ion-row>
+                <ion-col col-8>
                     {{item.Nombre}}
-                </ion-label>
-                <ion-label>
-                    <ion-buttons end>
-                        $ {{item.Deuda | redondear}}
-                    </ion-buttons>
-                </ion-label>
-            </ion-item>
+                </ion-col>
+                <ion-col col-4 class="colNumber">
+                    $ {{item.Deuda | redondear}}
+                </ion-col>
+            </ion-row>
         </ion-card-header>
         <ion-card-content *ngIf="item.desplFC">
-            <ion-list>
-                <ion-item>
-                    <ion-label class="TextoJustificado">
+            <ion-grid>
+                <ion-row class="titulos">
+                    <ion-col col-3>
                         N° Factura
-                    </ion-label>
-                    <ion-label class="TextoJustificado">
+                    </ion-col>
+                    <ion-col col-6>
                         Fecha
-                    </ion-label>
-                    <ion-label class="alineadoIzq">
+                    </ion-col>
+                    <ion-col col-3 style="text-align: center;">
                         Monto
-                    </ion-label>
-                </ion-item>
-                <ion-item *ngFor="let elemet of item.lista">
-                    <ion-label class="TextoJustificado">
-                        {{elemet.IDF}}
-                    </ion-label>
-                    <ion-label class="TextoJustificado">
-                        {{elemet.Fecha | date}}
-                    </ion-label>
-                    <ion-label class="alineadoIzq">
-                        $ {{elemet.Deuda | redondear}}
-                    </ion-label>
-                </ion-item>
-            </ion-list>
+                    </ion-col>
+                </ion-row>
+                <ion-row class="datos">
+                    <ion-col>
+                        <ion-row *ngFor="let elemet of item.lista">
+                            <ion-col col-3>
+                                {{elemet.IDF}}
+                            </ion-col>
+                            <ion-col col-6>
+                                {{elemet.Fecha | date}}
+                            </ion-col>
+                            <ion-col col-3 class="colNumber">
+                                $ {{elemet.Deuda | redondear}}
+                            </ion-col>
+                        </ion-row>
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
         </ion-card-content>
     </ion-card>
 
