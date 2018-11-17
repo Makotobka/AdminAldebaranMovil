@@ -11,6 +11,7 @@ import { StockPage } from '../pages/stock/stock';
 import { ListaDeudaPage } from '../pages/lista-deuda/lista-deuda';
 import { ArchivoInternosProvider } from '../providers/archivo-internos/archivo-internos';
 import { ConexionHttpProvider } from '../providers/conexion-http/conexion-http';
+import { FacturaComparacionPage } from '../pages/factura-comparacion/factura-comparacion';
 
 @Component({
   templateUrl: 'app.html'
@@ -32,7 +33,7 @@ export class MyApp {
     let modalPage;
     switch(tipo){
       case "FCM":
-        //modalPage = this.modal.create(FacturasPage,{estado:false,titulo:"Facturas por Fechas"});      
+        modalPage = this.modal.create(FacturaComparacionPage,{estado:false,titulo:"Facturas por Fechas"});      
       break;
       case "FBF":
         modalPage = this.modal.create(FacturasPage,{estado:false,titulo:"Facturas por Fechas"});      

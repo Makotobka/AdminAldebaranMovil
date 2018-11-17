@@ -15,7 +15,7 @@ import { Deuda } from '../../estructuras/Deuda';
 import { templateJitUrl } from '@angular/compiler';
 import { ShowMessageProvider } from '../../providers/show-message/show-message';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
-import { varColorBarra } from '../../app/app.config';
+import { varColorBarra, colorGraficoStandar } from '../../app/app.config';
 
 /**
  * Generated class for the DashboardGeneralPage page.
@@ -31,22 +31,6 @@ import { varColorBarra } from '../../app/app.config';
 })
 export class DashboardGeneralPage {
   private Sucursal={"ID":0,"CIUDAD":"DESCONOCIDA","AGENCIA":"DESCONOCIDA"};  
-
-   private colorBordePaste=[    
-    'rgb(255, 2, 1,0.8)',
-  	'rgb(4, 1, 255,0.8)',
-  	'rgb(124, 1, 255,0.8)',	
-  	'rgb(4, 170, 137,0.8)',
-  	'rgb(255, 83, 128,0.8)',
-    'rgb(255, 110, 1,0.8)',
-    'rgb(255, 133, 81,0.8)',
-    'rgb(255, 204, 85,0.8)',
-    'rgb(253, 254, 1,0.8)',
-    'rgb(163, 254, 18,0.8)',
-    'rgb(4, 209, 96,0.8)',    
-    'rgb(4, 111, 155,0.8)',
-    'rgb(255, 1, 255,0.8)'    
-  ]
         
   //#region Facturas
     private dataAñosC;
@@ -434,16 +418,14 @@ export class DashboardGeneralPage {
             meses = meses.slice(meses.length-ultimosNMes,meses.length);              
             //-------------------------------------//
             dataDatos.push(
-              {data:facVenta,label:"Ventas", backgroundColor: this.colorBordePaste[0]}
+              {data:facVenta,label:"Ventas", backgroundColor: colorGraficoStandar[0]}
             );
             dataDatos.push(
-              {data:facCompra,label:"Compras",backgroundColor: this.colorBordePaste[1]}
+              {data:facCompra,label:"Compras",backgroundColor: colorGraficoStandar[1]}
             );
             
             this.CanvasFactura.data.datasets=dataDatos        
             this.CanvasFactura.data.labels=meses    
-            console.log(dataDatos)
-            console.log(meses)
             this.totalFC = totalC.valueOf()/this.dataAñosV.length.valueOf();
             this.totalFV = totalV.valueOf()/this.dataAñosV.length.valueOf();
 
@@ -497,10 +479,7 @@ export class DashboardGeneralPage {
                   }]
               },
               legend: {
-                display: true,
-                labels: {
-                    fontColor: 'rgb(255, 99, 132)'
-                }
+                display: true
               }
           }  
         });
@@ -510,9 +489,7 @@ export class DashboardGeneralPage {
         //this.CanvasCaja.update()
       }
       //this.CanvasFactura.resize();    
-      this.CanvasFactura.update()    
-      
-      console.log("gr caja", this.CanvasFactura)
+      this.CanvasFactura.update()          
     }catch(ex){
 
     }
@@ -529,7 +506,7 @@ export class DashboardGeneralPage {
             datasets: [{      
                 label: 'Sin Caja',             
                 data:[0,0,0],
-                backgroundColor: this.colorBordePaste,
+                backgroundColor: colorGraficoStandar,
                 borderWidth: 2
             }]
         },
@@ -570,7 +547,7 @@ export class DashboardGeneralPage {
             datasets: [{      
                 label: 'Sin Caja',             
                 data:[0,0,0],
-                backgroundColor: this.colorBordePaste,
+                backgroundColor: colorGraficoStandar,
                 borderWidth: 2
             }]
         },
@@ -607,7 +584,7 @@ export class DashboardGeneralPage {
             datasets: [{      
                 label: 'Sin Caja',             
                 data:[3,5],
-                backgroundColor: this.colorBordePaste,
+                backgroundColor: colorGraficoStandar,
                 borderWidth: 2
             }]           
         },

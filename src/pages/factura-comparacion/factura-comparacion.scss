@@ -1,3 +1,28 @@
 page-factura-comparacion {
-
+    .tablaDatos {
+        .Titulo {
+            .col {
+                text-align: center;
+                font-size: x-large;
+                margin-bottom: 20px;
+                background-color: color($colors, secondary);
+                border: 2px solid lightgray;
+            }
+        }
+        .detalle {
+            border-bottom: 1px solid lightgray;
+            .col {
+                color: black;
+            }
+            .enable {
+                color: green;
+            }
+            .desable {
+                color: red;
+            }
+        }
+        .grafico {
+            margin-top: 10px;
+        }
+    }
 }
